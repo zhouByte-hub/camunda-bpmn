@@ -12,8 +12,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../../repository/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-          <entry name="$PROJECT_DIR$/../../repository/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+          <entry name="$USER_HOME$/T_FILE/repostory/maven/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
         <module name="camunda_api" />
       </profile>

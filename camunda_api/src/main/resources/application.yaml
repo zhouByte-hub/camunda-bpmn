@@ -1,12 +1,22 @@
 spring:
   application:
     name: camunda_api
+  profiles:
+    active: local
 camunda:
   client:
-    mode: self-managed
-    grpc-address: http://0.0.0.0:26500
-    rest-address: http://0.0.0.0:8080
+    #  自托管模式，区别于 Camunda SaaS 云服务
+    mode: self-managed 
+    # Zeebe 网关的 gRPC 地址，用于流程部署、流程实例创建、任务完成等操作
+    grpc-address: ENC(3Oz5CdOP1Mxu4Y7u/sn92ZpRMXeUNUJgJoDTXuv0riYpiZcfm5ngZ714RNjkWA1EfS4LxdL/lWuGuLhGIQo5UQ==)
+    # Zeebe 网关的 REST 地址，用于通过 HTTP REST API 与 Camunda 8 交互
+    rest-address: ENC(WkzegAwa1WfH++IAkRDSGo0OBc6DfiDIDPpnNP58e1TlGoZeaicQP7wORpiDg7O15Znt/VEPceVpwevWX+10Ow==)
     auth:
+      # 认证方式：basic 表示使用用户名/密码的 HTTP Basic 认证；其他选项：none（无认证）、identity（使用 Keycloak/Identity 服务的 OAuth2）
       method: basic
-      username: demo
-      password: demo
+      # Basic 认证的用户名，对应 Camunda Identity 中配置的账户
+      username: ENC(Xf/tTg4Ji8hl6e21AYzCH8nTUnene5z2Z/Umxq7DKXX54WGYlgiVQeIkh/6+tEql)
+      # Basic 认证的密码
+      password: ENC(k15ZkwmrfZeoh+qNf/j1TdvW0MURzPwI44U69rF+5/dChupoXNA0N7mD58tB3Xia)
+    # 是否启用 Camunda Client，设为 false 可在不连接 Camunda 的情况下启动应用
+    enabled: true

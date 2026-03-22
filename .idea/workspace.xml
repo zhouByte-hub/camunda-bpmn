@@ -4,17 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="416feecf-0de3-4ebf-986a-e1b4ec20ebc3" name="Changes" comment="" />
+    <list default="true" id="416feecf-0de3-4ebf-986a-e1b4ec20ebc3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/camunda_api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-        <option name="userSettingsFile" value="$USER_HOME$/Documents/apache-maven-3.9.11/conf/settings.xml" />
+        <option name="userSettingsFile" value="$USER_HOME$/T_FILE/apache-maven-3.9.11/conf/settings_resources.xml" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -28,26 +42,57 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.JasyptTest.encode.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "last_opened_file_path": "/Users/zhoujianing/Project/java/camunda-bpmi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="CamundaApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <component name="RunManager" selected="Spring Boot.CamundaApiApplication">
+    <configuration name="JasyptTest.encode" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="camunda_api" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="org.zhoubyte.camunda_api.CamundaApiApplication" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="JasyptTest" />
+      <option name="METHOD_NAME" value="encode" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CamundaApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="camunda_api" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.zhoubyte.camunda_api.CamundaApiApplication" />
+      <option name="VM_PARAMETERS" value="-Djasypt.encryptor.algorithm=PBEWITHHMACSHA512ANDAES_256 -Djasypt.encryptor.pool-size=1 -Djasypt.encryptor.password=CAMUNDA_8_CONFIG -Djasypt.encryptor.provider-name=SunJCE -Djasypt.encryptor.salt-generator-classname=org.jasypt.salt.RandomSaltGenerator -Djasypt.encryptor.iv-generator-classname=org.jasypt.iv.RandomIvGenerator" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.JasyptTest.encode" />
+      <item itemvalue="Spring Boot.CamundaApiApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.JasyptTest.encode" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
       </set>
     </attachedChunks>
   </component>
@@ -60,8 +105,12 @@
       <updated>1762098077873</updated>
       <workItem from="1773756399051" duration="307000" />
       <workItem from="1774103884135" duration="2225000" />
+      <workItem from="1774163196004" duration="4441000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
