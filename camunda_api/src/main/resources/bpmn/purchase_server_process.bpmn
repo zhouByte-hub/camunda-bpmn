@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0rj91eq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.44.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
-  <bpmn:process id="Process_1ngo0xg" isExecutable="true">
+  <bpmn:process id="purchase_server_process" name="购买服务器审批流程" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:versionTag value="1" />
+    </bpmn:extensionElements>
     <bpmn:serviceTask id="Activity_0td3eul" name="拨款购买">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="to_do_purchase_service" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1619hw2</bpmn:incoming>
       <bpmn:outgoing>Flow_1hxkk0f</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -34,6 +40,9 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=finance_audit_result=true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sendTask id="Activity_09piub9" name="发送邮件">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send_message" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0zv8bxi</bpmn:incoming>
       <bpmn:incoming>Flow_1hxkk0f</bpmn:incoming>
       <bpmn:outgoing>Flow_1bdni6c</bpmn:outgoing>
@@ -129,7 +138,7 @@
     </bpmn:startEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1ngo0xg">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="purchase_server_process">
       <bpmndi:BPMNShape id="Activity_1mv88bi_di" bpmnElement="Activity_0td3eul">
         <dc:Bounds x="960" y="670" width="100" height="80" />
         <bpmndi:BPMNLabel />
