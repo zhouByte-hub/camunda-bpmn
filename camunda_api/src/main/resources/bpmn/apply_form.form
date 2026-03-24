@@ -1,0 +1,220 @@
+{
+  "components": [
+    {
+      "label": "企业基本信息",
+      "components": [
+        {
+          "label": "公司名称",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_1uaazri",
+            "columns": null
+          },
+          "id": "Field_00k9x3z",
+          "key": "company_name"
+        },
+        {
+          "label": "统一社会信用代码",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_1uaazri",
+            "columns": null
+          },
+          "id": "Field_1kvko1u",
+          "key": "identify"
+        },
+        {
+          "label": "公司法人名称",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_1g6y8qv",
+            "columns": null
+          },
+          "id": "Field_0s1di0r",
+          "key": "company_owner_name"
+        },
+        {
+          "label": "公司法人身份证",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_1g6y8qv",
+            "columns": null
+          },
+          "id": "Field_0laxttp",
+          "key": "identify_of_company_owner"
+        },
+        {
+          "label": "公司法人联系电话",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_0xux74h",
+            "columns": null
+          },
+          "id": "Field_1eirotf",
+          "key": "contact_number_of_company_owner"
+        },
+        {
+          "label": "实际购买人联系电话",
+          "type": "textfield",
+          "layout": {
+            "row": "Row_0xux74h",
+            "columns": null
+          },
+          "id": "Field_10h5yk9",
+          "key": "contact_number_of_actual"
+        }
+      ],
+      "showOutline": true,
+      "type": "group",
+      "layout": {
+        "row": "Row_09lyisq",
+        "columns": null
+      },
+      "id": "Field_0wcje3x"
+    },
+    {
+      "type": "separator",
+      "layout": {
+        "row": "Row_1ad51r8",
+        "columns": null
+      },
+      "id": "Field_1r71w39"
+    },
+    {
+      "label": "服务器基本信息",
+      "components": [
+        {
+          "label": "镜像/操作系统",
+          "values": [
+            {
+              "label": "CenteOS",
+              "value": "CenteOS"
+            },
+            {
+              "label": "Ubuntu",
+              "value": "Ubuntu"
+            },
+            {
+              "label": "Windows Server",
+              "value": "Windows Server"
+            }
+          ],
+          "type": "select",
+          "layout": {
+            "row": "Row_1yxhvw7",
+            "columns": null
+          },
+          "id": "Field_033fs84",
+          "key": "os_type",
+          "searchable": false,
+          "defaultValue": "CenteOS"
+        },
+        {
+          "label": "实例规格",
+          "values": [
+            {
+              "label": "2C4G",
+              "value": "2C4G"
+            },
+            {
+              "label": "4C8G",
+              "value": "4C8G"
+            }
+          ],
+          "type": "select",
+          "layout": {
+            "row": "Row_1jvlw6r",
+            "columns": null
+          },
+          "id": "Field_0tod59x",
+          "key": "instance_spec"
+        },
+        {
+          "label": "地域/可用区",
+          "values": [
+            {
+              "label": "华南",
+              "value": "L-huanan"
+            },
+            {
+              "label": "华北",
+              "value": "L-huabei"
+            },
+            {
+              "label": "hua'dong",
+              "value": "L-huadong"
+            }
+          ],
+          "type": "select",
+          "layout": {
+            "row": "Row_1jvlw6r",
+            "columns": null
+          },
+          "id": "Field_10rs1ib",
+          "key": "area"
+        },
+        {
+          "label": "存储",
+          "values": [
+            {
+              "label": "高效云盘",
+              "value": "cloud_disk"
+            },
+            {
+              "label": "SSD",
+              "value": "SSD"
+            }
+          ],
+          "type": "select",
+          "layout": {
+            "row": "Row_08dteyt",
+            "columns": null
+          },
+          "id": "Field_01pspsi",
+          "key": "disk"
+        },
+        {
+          "label": "购买数量",
+          "type": "number",
+          "layout": {
+            "row": "Row_08dteyt",
+            "columns": null
+          },
+          "id": "Field_1c8vs7r",
+          "key": "buy_count",
+          "increment": "1",
+          "decimalDigits": 1,
+          "defaultValue": 1
+        },
+        {
+          "subtype": "date",
+          "dateLabel": "到期时间",
+          "type": "datetime",
+          "layout": {
+            "row": "Row_0c23z4e",
+            "columns": null
+          },
+          "id": "Field_16ck6y4",
+          "key": "expire_time"
+        }
+      ],
+      "showOutline": true,
+      "type": "group",
+      "layout": {
+        "row": "Row_1rvs703",
+        "columns": null
+      },
+      "id": "Field_062igd4"
+    }
+  ],
+  "type": "default",
+  "id": "purchase_server_apply_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "versionTag": "1.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.44.0"
+  },
+  "schemaVersion": 19
+}
