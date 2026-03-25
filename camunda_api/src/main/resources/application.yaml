@@ -8,11 +8,15 @@ spring:
 camunda:
   client:
     #  自托管模式，区别于 Camunda SaaS 云服务
-    mode: self-managed 
+    mode: self-managed
     # Zeebe 网关的 gRPC 地址，用于流程部署、流程实例创建、任务完成等操作
     grpc-address: ENC(3Oz5CdOP1Mxu4Y7u/sn92ZpRMXeUNUJgJoDTXuv0riYpiZcfm5ngZ714RNjkWA1EfS4LxdL/lWuGuLhGIQo5UQ==)
     # Zeebe 网关的 REST 地址，用于通过 HTTP REST API 与 Camunda 8 交互
     rest-address: ENC(WkzegAwa1WfH++IAkRDSGo0OBc6DfiDIDPpnNP58e1TlGoZeaicQP7wORpiDg7O15Znt/VEPceVpwevWX+10Ow==)
+    # 使用 REST 长轮询（Task Listener job 激活依赖 REST API）
+    prefer-rest-over-grpc: true
+    # HTTP 请求超时：必须显著大于服务端长轮询等待时间（服务端默认约 10s），设为 60s 保留足够余量
+    request-timeout: 60s
     auth:
       # 认证方式：basic 表示使用用户名/密码的 HTTP Basic 认证；其他选项：none（无认证）、identity（使用 Keycloak/Identity 服务的 OAuth2）
       method: basic
@@ -22,3 +26,9 @@ camunda:
       password: ENC(k15ZkwmrfZeoh+qNf/j1TdvW0MURzPwI44U69rF+5/dChupoXNA0N7mD58tB3Xia)
     # 是否启用 Camunda Client，设为 false 可在不连接 Camunda 的情况下启动应用
     enabled: true
+    worker:
+      defaults:
+        # Job 锁定超时时间，Worker 在此时间内未完成则 Job 被重新分配
+        timeout: 30s
+        # 单个 Worker 最大并发处理 Job 数
+        max-jobs-active: 32

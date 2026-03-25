@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/deploy")
@@ -29,11 +30,22 @@ public class DeployController {
 
     // 部署流程
     @GetMapping(value = "/bpmn_resource")
-    public DeploymentEvent deployBpmnResource() {
-        return camundaClient.newDeployResourceCommand()
+    public Optional<DeploymentEvent> deployBpmnResource() {
+        // 查【流程定义】是否存在，而非查流程实例
+//        boolean alreadyDeployed = !camundaClient.newProcessDefinitionSearchRequest()
+//                .filter(f -> f.processDefinitionId("purchase_server_process"))
+//                .send()
+//                .join()
+//                .items().isEmpty();
+//        if (alreadyDeployed) {
+//            log.info("流程定义已存在，跳过部署");
+//            return Optional.empty();
+//        }
+        DeploymentEvent join = camundaClient.newDeployResourceCommand()
                 .addResourceFromClasspath("bpmn/purchase_server_process.bpmn")
                 .send()
                 .join();
+        return Optional.of(join);
     }
 
     // 部署 Form
@@ -45,7 +57,7 @@ public class DeployController {
                 .join();
     }
 
-    // 调用 API 删除部署的流程会失败，可以使用 Operate UI提供的删除操作
+    // 调用 API 删除部署的流程会失败
 //    @DeleteMapping(value = "/{resourceKey}/resource:delete")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public void deleteResource(@PathVariable("resourceKey") Long resourceKey) {

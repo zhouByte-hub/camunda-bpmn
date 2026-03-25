@@ -1,0 +1,55 @@
+{
+  "components": [
+    {
+      "label": "申请单审批",
+      "components": [
+        {
+          "label": "审批结果",
+          "values": [
+            {
+              "label": "通过",
+              "value": "pass"
+            },
+            {
+              "label": "不通过",
+              "value": "unpass"
+            }
+          ],
+          "type": "select",
+          "layout": {
+            "row": "Row_1mdlym1",
+            "columns": null
+          },
+          "id": "Field_10rg6zu",
+          "key": "audit_result"
+        },
+        {
+          "label": "原因",
+          "type": "textarea",
+          "layout": {
+            "row": "Row_1veqome",
+            "columns": null
+          },
+          "id": "Field_144e9x8",
+          "key": "reason"
+        }
+      ],
+      "showOutline": true,
+      "type": "group",
+      "layout": {
+        "row": "Row_09cb7x1",
+        "columns": null
+      },
+      "id": "Field_0j8dfuk"
+    }
+  ],
+  "type": "default",
+  "id": "confim_audit_form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.44.0"
+  },
+  "schemaVersion": 19
+}
