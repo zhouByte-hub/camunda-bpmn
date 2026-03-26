@@ -8,15 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="sub_modules" />
+        <module name="procure_flow" />
         <module name="scorpio-camunda-bpmn-starter" />
+        <module name="contract_flow" />
       </profile>
       <profile name="Annotation profile for camunda_bpmn" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/T_FILE/repostory/maven/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-          <entry name="$USER_HOME$/T_FILE/repostory/maven/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
+          <entry name="$PROJECT_DIR$/../../repository/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
         </processorPath>
         <module name="camunda_api" />
       </profile>
@@ -25,6 +26,8 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="camunda_api" options="-parameters" />
+      <module name="contract_flow" options="-parameters" />
+      <module name="procure_flow" options="-parameters" />
       <module name="scorpio-camunda-bpmn-starter" options="-parameters" />
       <module name="sub_modules" options="-parameters" />
     </option>

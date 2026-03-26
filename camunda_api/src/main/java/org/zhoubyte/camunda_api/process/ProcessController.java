@@ -66,10 +66,12 @@ public class ProcessController {
     public Map<String, Object> completeUserTask(@PathVariable("task_key") Long taskKey, @RequestBody Map<String, Object> variables) {
         log.info("completing user task {} with variables {}", taskKey, variables);
         camundaClient.newCompleteUserTaskCommand(taskKey).variables(variables).send().join();
-
         UserTask userTask = camundaClient.newUserTaskGetRequest(taskKey).send().join();
+
+        Object auditResult = variables.getOrDefault("audit_result", false);
         Map<String, Object> result = new HashMap<>();
-        result.put(userTask.getName(), variables);
+        result.put(userTask.getName(), auditResult);
+        result.put("audit_result", auditResult);
         return result;
     }
 }
