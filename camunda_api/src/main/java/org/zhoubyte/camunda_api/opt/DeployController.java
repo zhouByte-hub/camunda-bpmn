@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,12 @@ public class DeployController {
         this.camundaClient = camundaClient;
     }
 
+
+    @GetMapping(value = "/process_definition")
+    public List<ProcessDefinition> bpmnProcessDefinition(){
+        return camundaClient.newProcessDefinitionSearchRequest().send().join().items();
+    }
+
     // 部署流程
     @GetMapping(value = "/bpmn_resource")
     public Optional<DeploymentEvent> deployBpmnResource() {
@@ -43,18 +50,11 @@ public class DeployController {
 //        }
         DeploymentEvent join = camundaClient.newDeployResourceCommand()
                 .addResourceFromClasspath("bpmn/purchase_server_process.bpmn")
+                .addResourceFromClasspath("bpmn/apply_form.form")
+                .addResourceFromClasspath("bpmn/confirm_audit_form.form")
                 .send()
                 .join();
         return Optional.of(join);
-    }
-
-    // 部署 Form
-    @GetMapping(value = "/form_resource")
-    public DeploymentEvent deployFormResource() {
-        return camundaClient.newDeployResourceCommand()
-                .addResourceFromClasspath("bpmn/apply_form.form")
-                .send()
-                .join();
     }
 
     // 调用 API 删除部署的流程会失败

@@ -14,7 +14,7 @@ camunda:
     # Zeebe 网关的 REST 地址，用于通过 HTTP REST API 与 Camunda 8 交互
     rest-address: ENC(WkzegAwa1WfH++IAkRDSGo0OBc6DfiDIDPpnNP58e1TlGoZeaicQP7wORpiDg7O15Znt/VEPceVpwevWX+10Ow==)
     # 使用 REST 长轮询（Task Listener job 激活依赖 REST API）
-    prefer-rest-over-grpc: true
+    prefer-rest-over-grpc: false
     # HTTP 请求超时：必须显著大于服务端长轮询等待时间（服务端默认约 10s），设为 60s 保留足够余量
     request-timeout: 60s
     auth:

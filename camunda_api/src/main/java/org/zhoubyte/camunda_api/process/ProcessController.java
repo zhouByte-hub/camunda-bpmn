@@ -65,11 +65,11 @@ public class ProcessController {
     @PostMapping(value = "/userTask/{task_key}:complete")
     public Map<String, Object> completeUserTask(@PathVariable("task_key") Long taskKey, @RequestBody Map<String, Object> variables) {
         log.info("completing user task {} with variables {}", taskKey, variables);
-        ElementInstance join = camundaClient.newElementInstanceGetRequest(taskKey).send().join();
         camundaClient.newCompleteUserTaskCommand(taskKey).variables(variables).send().join();
 
+        UserTask userTask = camundaClient.newUserTaskGetRequest(taskKey).send().join();
         Map<String, Object> result = new HashMap<>();
-        result.put(join.getElementName(), variables);
+        result.put(userTask.getName(), variables);
         return result;
     }
 }

@@ -16,23 +16,21 @@ public class AuditLogsWorkerJob {
      * type 必须与 BPMN 中 <zeebe:taskListener eventType="creating" type="record_audit_logs"> 完全一致
      *
      * 注意：此 Worker 处理的是 Task Listener（非普通 ServiceTask），
-     * 必须手动完成 Job，否则 UserTask 会卡在 creating 状态无法分配给审批人
+     * 必须手动完成 Job（newCompleteCommand），否则 UserTask 会卡在 CREATING 状态无法被审批人操作
      */
     @JobWorker(type = "record_audit_logs", autoComplete = false)
-    public void recordAuditLogs(final JobClient client, final ActivatedJob activatedJob) {
-        log.info("[审计日志] elementId={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
-                activatedJob.getElementId(),
-                activatedJob.getProcessInstanceKey(),
-                activatedJob.getVariablesAsMap());
+    public void recordAuditLogs(JobClient client, ActivatedJob activatedJob) {
         try {
-            // TODO: 实际审计日志业务逻辑（如写入数据库）
-
-            // 必须完成此 Job，否则 UserTask 将卡在 creating 状态
+            // 必须完成此 Job，UserTask 才能从 CREATING 转为 CREATED 状态
             client.newCompleteCommand(activatedJob.getKey())
                     .send()
                     .join();
-            log.info("[审计日志] elementId={} Task Listener 执行完成，UserTask 可继续流转",
-                    activatedJob.getElementId());
+
+            log.info("[审计日志] elementId={}, userTaskKey={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
+                    activatedJob.getElementId(),
+                    activatedJob.getUserTask().getUserTaskKey(),
+                    activatedJob.getProcessInstanceKey(),
+                    activatedJob.getVariablesAsMap());
         } catch (Exception e) {
             log.error("[审计日志] elementId={} 执行失败: {}", activatedJob.getElementId(), e.getMessage(), e);
             client.newFailCommand(activatedJob.getKey())
