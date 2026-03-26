@@ -5,14 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18cb01d1-0b84-42fa-856a-1e5178608cee" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/jobs/OverdueNoticeWorkerJob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/jobs/AuditLogsWorkerJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/jobs/AuditLogsWorkerJob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessConstant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/purchase_server_process.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/purchase_server_process.bpmn" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/CamundaClient-API.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

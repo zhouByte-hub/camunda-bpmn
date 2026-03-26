@@ -2,7 +2,7 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0rj91eq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.44.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
   <bpmn:process id="purchase_server_process" name="购买服务器审批流程" isExecutable="true">
     <bpmn:extensionElements>
-      <zeebe:versionTag value="7" />
+      <zeebe:versionTag value="8" />
     </bpmn:extensionElements>
     <bpmn:serviceTask id="purchase_of_funds" name="拨款购买">
       <bpmn:extensionElements>
@@ -18,6 +18,9 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="record_audit_logs" />
         </zeebe:taskListeners>
+        <zeebe:taskHeaders>
+          <zeebe:header key="responsibility" value="部门经理" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_152vbpg</bpmn:incoming>
       <bpmn:outgoing>Flow_17ih4oi</bpmn:outgoing>
@@ -29,6 +32,9 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="record_audit_logs" />
         </zeebe:taskListeners>
+        <zeebe:taskHeaders>
+          <zeebe:header key="responsibility" value="财务" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ph4o6f</bpmn:incoming>
       <bpmn:incoming>Flow_02xukjl</bpmn:incoming>
@@ -58,6 +64,9 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="1" type="record_audit_logs" />
         </zeebe:taskListeners>
+        <zeebe:taskHeaders>
+          <zeebe:header key="responsibility" value="项目组长" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0yyyv2t</bpmn:incoming>
       <bpmn:incoming>Flow_0s6qr9z</bpmn:incoming>
@@ -71,6 +80,9 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="record_audit_logs" />
         </zeebe:taskListeners>
+        <zeebe:taskHeaders>
+          <zeebe:header key="responsibility" value="CEO" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1yimthe</bpmn:incoming>
       <bpmn:outgoing>Flow_1saefj8</bpmn:outgoing>

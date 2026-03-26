@@ -7,9 +7,10 @@ public interface ProcessConstant {
 
     // 流程实例属性
     String MONEY = "money";
-    String MANAGER_AUDIT_RESULT = "manager_audit_result";
-    String CEO_AUDIT_RESULT = "ceo_audit_result";
-    String FINANCE_AUDIT_RESULT = "finance_audit_result";
+    String OVERDUE_TIMER_CYCLE = "overdue_timer_cycle";
+    String RESPONSIBILITY = "responsibility";
+
+    String TASK_REVOKE = "task_revoke";
 
 
 }

@@ -1,12 +1,11 @@
 package org.zhoubyte.camunda_api.process;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.client.api.response.CancelProcessInstanceResponse;
 import io.camunda.client.api.response.ProcessInstanceEvent;
-import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.UserTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.zhoubyte.camunda_api.util.TimerCycleUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +24,16 @@ public class ProcessController {
 
     // 创建流程实例
     @GetMapping(value = "/start")
-    public Map<String, Object> startProcess(@RequestParam(value = "money") Integer money) {
+    public Map<String, Object> startProcess(@RequestParam(value = "money") Integer money, @RequestParam(value = "overdue", required = false) Integer overdue) {
         // 在流程实例初始化的时候添加流程变量
         Map<String, Object> variables = new HashMap<>();
         variables.put(ProcessConstant.MONEY, money);
+        if(overdue == null) {
+            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.never());
+        }else{
+            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.ofDays(overdue, 1));
+        }
+        log.info("Process start， variables: {}", variables);
 
         // 创建并启动流程实例
         ProcessInstanceEvent processInstanceEvent = camundaClient.newCreateInstanceCommand()
@@ -39,6 +44,8 @@ public class ProcessController {
                 .join();
         Map<String, Object> result = new HashMap<>();
         result.put("processInstance",  processInstanceEvent);
+
+        // 会获取到空列表，因为具体的任务还未创建
         List<UserTask> items = camundaClient.newUserTaskSearchRequest()
                 .filter(f -> f.processInstanceKey(processInstanceEvent.getProcessInstanceKey()))
                 .send()

@@ -3,8 +3,13 @@ package org.zhoubyte.camunda_api.jobs;
 import io.camunda.client.annotation.JobWorker;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.worker.JobClient;
+import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.zhoubyte.camunda_api.process.ProcessConstant;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -20,13 +25,20 @@ public class AuditLogsWorkerJob {
      */
     @JobWorker(type = "record_audit_logs", autoComplete = false)
     public void recordAuditLogs(JobClient client, ActivatedJob activatedJob) {
+        String responsibility = activatedJob.getCustomHeaders().get(ProcessConstant.RESPONSIBILITY);
         try {
+            Map<String,Object> variables = new HashMap<>();
+            if(!StringUtils.isEmpty(responsibility)) {
+                variables.put(ProcessConstant.RESPONSIBILITY, responsibility);
+            }
             // 必须完成此 Job，UserTask 才能从 CREATING 转为 CREATED 状态
             client.newCompleteCommand(activatedJob.getKey())
+                    .variables(variables)
                     .send()
                     .join();
 
-            log.info("[审计日志] elementId={}, userTaskKey={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
+            log.info("[审计日志] responsibility = {}, elementId={}, userTaskKey={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
+                    responsibility,
                     activatedJob.getElementId(),
                     activatedJob.getUserTask().getUserTaskKey(),
                     activatedJob.getProcessInstanceKey(),
