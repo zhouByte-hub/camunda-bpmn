@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18cb01d1-0b84-42fa-856a-1e5178608cee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/camunda_api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/jobs/AuditLogsWorkerJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/jobs/AuditLogsWorkerJob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/opt/DeployController.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/opt/DeployController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/java/org/zhoubyte/camunda_api/process/ProcessController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/confim_audit_form.form" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/confirm_audit_form.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/purchase_server_process.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/camunda_api/src/main/resources/bpmn/purchase_server_process.bpmn" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scorpio-camunda-bpmn-starter/src/main/resources/META-INF.spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,22 +36,47 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="3BTUqA5qDPzhRSKK9rgUWjwZ7a9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.CamundaApiApplication.executor": "Debug",
     "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.CamundaApiApplication">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="camunda_bpmn" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="camunda_bpmn" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
     <configuration name="CamundaApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="camunda_api" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.zhoubyte.camunda_api.CamundaApiApplication" />
@@ -71,14 +91,47 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ScorpioCamundaBpmnStarterApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="scorpio-camunda-bpmn-starter" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zhoubyte.scorpio.ScorpioCamundaBpmnStarterApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SubModulesApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="sub_modules" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zhoubyte.sub_modules.SubModulesApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.CamundaApiApplication" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="18cb01d1-0b84-42fa-856a-1e5178608cee" name="Changes" comment="" />
+      <created>1774512741343</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774512741343</updated>
+      <workItem from="1774512742380" duration="1741000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

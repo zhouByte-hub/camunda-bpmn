@@ -17,6 +17,7 @@
 
     <modules>
         <module>camunda_api</module>
+        <module>scorpio-camunda-bpmn-starter</module>
     </modules>
 
     <properties>

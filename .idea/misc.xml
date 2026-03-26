@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/camunda_api/pom.xml" />
+        <option value="$PROJECT_DIR$/scorpio-camunda-bpmn-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/sub_modules/pom.xml" />
       </list>
     </option>
   </component>
