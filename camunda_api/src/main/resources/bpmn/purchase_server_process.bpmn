@@ -236,7 +236,7 @@
   </bpmn:process>
   <bpmn:message id="Message_2tobcm6" name="task_revoke">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=responsibility" />
+      <zeebe:subscription correlationKey="=process_instance_revoke_key" />
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

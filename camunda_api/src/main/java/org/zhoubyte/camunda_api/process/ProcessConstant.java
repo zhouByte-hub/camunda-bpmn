@@ -4,6 +4,8 @@ public interface ProcessConstant {
 
     // 流程名称
     String PROCESS_INSTANCE_ID = "purchase_server_process";
+    // 流程实例 Key
+    String PROCESS_INSTANCE_REVOKE_KEY = "process_instance_revoke_key";
 
     // 流程实例属性
     String MONEY = "money";

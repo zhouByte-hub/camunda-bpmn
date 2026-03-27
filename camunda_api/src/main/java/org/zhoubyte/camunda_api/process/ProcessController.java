@@ -10,6 +10,7 @@ import org.zhoubyte.camunda_api.util.TimerCycleUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/process")
@@ -33,6 +34,7 @@ public class ProcessController {
             Zeebe 执行行为：流程启动时立即激活作用域，立即注册消息订阅
             是否创建消息订阅：立即创建，立即求值 responsibility → null → Incident
          */
+        variables.put(ProcessConstant.PROCESS_INSTANCE_REVOKE_KEY, UUID.randomUUID());
         variables.put(ProcessConstant.RESPONSIBILITY, "项目组长");
         if(overdue == null || overdue <= 0) {
             variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.immediately());

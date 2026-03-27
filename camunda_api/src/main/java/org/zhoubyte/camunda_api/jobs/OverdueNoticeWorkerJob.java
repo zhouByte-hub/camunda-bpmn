@@ -20,14 +20,15 @@ public class OverdueNoticeWorkerJob {
 
     @JobWorker(type = "send-overdue-notice")
     public void sendOverdueNotice(ActivatedJob activatedJob) {
-        String responsibility = (String) activatedJob.getVariable(ProcessConstant.RESPONSIBILITY);
-        if(!StringUtils.isEmpty(responsibility)) {
+        String revokeKey = (String) activatedJob.getVariable(ProcessConstant.PROCESS_INSTANCE_REVOKE_KEY);
+        if(!StringUtils.isEmpty(revokeKey)) {
             camundaClient.newPublishMessageCommand()
                     .messageName(ProcessConstant.TASK_REVOKE)
-                    .correlationKey(responsibility)
+                    .correlationKey(revokeKey)
                     .send()
                     .join();
         }
+        Object responsibility = activatedJob.getVariable(ProcessConstant.RESPONSIBILITY);
         log.info("Send overdue-notice job start, responsibility={}", responsibility);
     }
 
