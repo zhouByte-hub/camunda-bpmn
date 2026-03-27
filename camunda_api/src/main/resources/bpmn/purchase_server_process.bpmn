@@ -11,7 +11,7 @@
       <bpmn:incoming>Flow_1619hw2</bpmn:incoming>
       <bpmn:outgoing>Flow_1hxkk0f</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="department_manager_approval_1" name="部门经理审批">
+    <bpmn:userTask id="department_manager_approval" name="部门经理审批">
       <bpmn:extensionElements>
         <zeebe:userTask />
         <zeebe:formDefinition formId="confim_audit_form" />
@@ -124,13 +124,13 @@
       <bpmn:outgoing>Flow_152vbpg</bpmn:outgoing>
       <bpmn:outgoing>Flow_0y79hu3</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_152vbpg" name="组长审批通过" sourceRef="Gateway_1mm01bz" targetRef="department_manager_approval_1">
+    <bpmn:sequenceFlow id="Flow_152vbpg" name="组长审批通过" sourceRef="Gateway_1mm01bz" targetRef="department_manager_approval">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=audit_result=true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0yyyv2t</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_17ih4oi" sourceRef="department_manager_approval_1" targetRef="Gateway_0lx0qts" />
+    <bpmn:sequenceFlow id="Flow_17ih4oi" sourceRef="department_manager_approval" targetRef="Gateway_0lx0qts" />
     <bpmn:exclusiveGateway id="Gateway_06fguva">
       <bpmn:incoming>Flow_0rwlav9</bpmn:incoming>
       <bpmn:outgoing>Flow_1yimthe</bpmn:outgoing>
@@ -163,7 +163,7 @@
       <bpmn:outgoing>Flow_1hefyjk</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1hefyjk" sourceRef="Activity_1sciepm" targetRef="Event_10jc7ry" />
-    <bpmn:boundaryEvent id="Event_0w2rnj8" name="超时处置" cancelActivity="false" attachedToRef="department_manager_approval_1">
+    <bpmn:boundaryEvent id="Event_0w2rnj8" name="超时处置" cancelActivity="false" attachedToRef="department_manager_approval">
       <bpmn:outgoing>Flow_0rhg8kf</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0ysfgwg">
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">=overdue_timer_cycle</bpmn:timeCycle>
@@ -215,27 +215,25 @@
       <bpmn:incoming>Flow_1j3w2u7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1j3w2u7" sourceRef="Activity_05gbn4x" targetRef="Event_1xtlxo3" />
-    <bpmn:sequenceFlow id="Flow_0ska5fm" sourceRef="revoke" targetRef="Activity_06bae2p" />
-    <bpmn:serviceTask id="Activity_06bae2p" name="发送逾期邮件">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="=send_overdue_message" retries="3" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0ska5fm</bpmn:incoming>
-      <bpmn:outgoing>Flow_0d5kqjq</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_0sb2nz3">
-      <bpmn:incoming>Flow_0d5kqjq</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0d5kqjq" sourceRef="Activity_06bae2p" targetRef="Event_0sb2nz3" />
-    <bpmn:intermediateCatchEvent id="revoke" name="revoke">
-      <bpmn:outgoing>Flow_0ska5fm</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_049lz2t" messageRef="Message_2tobcm6" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:group id="send_message_notice" categoryValueRef="CategoryValue_0oz5ca3" />
+    <bpmn:subProcess id="Activity_1eux7iq" name="接受逾期事件并发送邮件提醒" triggeredByEvent="true">
+      <bpmn:serviceTask id="Activity_06bae2p" name="发送逾期邮件">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="send_overdue_message" retries="3" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0jeltac</bpmn:incoming>
+        <bpmn:outgoing>Flow_130ffnh</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="Event_0sb2nz3">
+        <bpmn:incoming>Flow_130ffnh</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:startEvent id="revoke" name="revoke" isInterrupting="false">
+        <bpmn:outgoing>Flow_0jeltac</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_01qh1up" messageRef="Message_2tobcm6" />
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_0jeltac" sourceRef="revoke" targetRef="Activity_06bae2p" />
+      <bpmn:sequenceFlow id="Flow_130ffnh" sourceRef="Activity_06bae2p" targetRef="Event_0sb2nz3" />
+    </bpmn:subProcess>
   </bpmn:process>
-  <bpmn:category id="Category_1u6dm4j">
-    <bpmn:categoryValue id="CategoryValue_0oz5ca3" value="接受逾期事件并发送邮件提醒" />
-  </bpmn:category>
   <bpmn:message id="Message_2tobcm6" name="task_revoke">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=responsibility" />
@@ -247,7 +245,7 @@
         <dc:Bounds x="670" y="650" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_176dpzy_di" bpmnElement="department_manager_approval_1">
+      <bpmndi:BPMNShape id="Activity_176dpzy_di" bpmnElement="department_manager_approval">
         <dc:Bounds x="500" y="280" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0w8x236_di" bpmnElement="financial_approval">
@@ -314,25 +312,31 @@
           <dc:Bounds x="981" y="205" width="19" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eux7iq_di" bpmnElement="Activity_1eux7iq" isExpanded="true">
+        <dc:Bounds x="1060" y="540" width="340" height="200" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1sefmj5_di" bpmnElement="Activity_06bae2p">
-        <dc:Bounds x="1200" y="840" width="100" height="80" />
+        <dc:Bounds x="1180" y="590" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0sb2nz3_di" bpmnElement="Event_0sb2nz3">
-        <dc:Bounds x="1352" y="862" width="36" height="36" />
+        <dc:Bounds x="1322" y="612" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ug55v5_di" bpmnElement="revoke">
-        <dc:Bounds x="1112" y="862" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0l23ha6_di" bpmnElement="revoke">
+        <dc:Bounds x="1092" y="612" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1113" y="905" width="34" height="14" />
+          <dc:Bounds x="1093" y="655" width="34" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Group_1iukskn_di" bpmnElement="send_message_notice">
-        <dc:Bounds x="1060" y="780" width="380" height="200" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1214" y="787" width="77" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0jeltac_di" bpmnElement="Flow_0jeltac">
+        <di:waypoint x="1128" y="630" />
+        <di:waypoint x="1180" y="630" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_130ffnh_di" bpmnElement="Flow_130ffnh">
+        <di:waypoint x="1280" y="630" />
+        <di:waypoint x="1322" y="630" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BPMNShape_039hnhv" bpmnElement="Event_03r2ts7">
         <dc:Bounds x="1112" y="262" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -493,14 +497,6 @@
       <bpmndi:BPMNEdge id="Flow_1j3w2u7_di" bpmnElement="Flow_1j3w2u7">
         <di:waypoint x="1080" y="160" />
         <di:waypoint x="1008" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ska5fm_di" bpmnElement="Flow_0ska5fm">
-        <di:waypoint x="1148" y="880" />
-        <di:waypoint x="1200" y="880" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0d5kqjq_di" bpmnElement="Flow_0d5kqjq">
-        <di:waypoint x="1300" y="880" />
-        <di:waypoint x="1352" y="880" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

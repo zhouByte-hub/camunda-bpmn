@@ -28,10 +28,16 @@ public class ProcessController {
         // 在流程实例初始化的时候添加流程变量
         Map<String, Object> variables = new HashMap<>();
         variables.put(ProcessConstant.MONEY, money);
-        if(overdue == null) {
-            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.never());
+        /*
+            Event Sub Process
+            Zeebe 执行行为：流程启动时立即激活作用域，立即注册消息订阅
+            是否创建消息订阅：立即创建，立即求值 responsibility → null → Incident
+         */
+        variables.put(ProcessConstant.RESPONSIBILITY, "项目组长");
+        if(overdue == null || overdue <= 0) {
+            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.immediately());
         }else{
-            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.ofDays(overdue, 1));
+            variables.put(ProcessConstant.OVERDUE_TIMER_CYCLE, TimerCycleUtil.ofDays(overdue));
         }
         log.info("Process start， variables: {}", variables);
 

@@ -65,7 +65,7 @@ public class TimerCycleUtil {
      * @throws IllegalArgumentException 当 days 或 repeat 小于或等于 0 时抛出
      */
     public static String ofDays(int days, int repeat) {
-        if (repeat <= 0 && days <= 0) {
+        if (days <= 0) {
             throw new IllegalArgumentException("days 必须大于 0，当前值：" + days);
         }
         if (repeat <= 0) {
@@ -85,6 +85,11 @@ public class TimerCycleUtil {
      */
     public static String never() {
         return "R0/P1D";
+    }
+
+    // 一秒触发一次，重复一次
+    public static String immediately() {
+        return "R1/PT1S";
     }
 
 }
