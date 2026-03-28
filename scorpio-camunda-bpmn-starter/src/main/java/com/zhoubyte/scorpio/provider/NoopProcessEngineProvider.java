@@ -1,4 +1,12 @@
 package com.zhoubyte.scorpio.provider;
 
-public class NoopProcessEngineProvider {
+import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
+
+public class NoopProcessEngineProvider implements ProcessEngineProvider {
+
+    @Override
+    public String engineName() {
+        return "noop";
+    }
+
 }
