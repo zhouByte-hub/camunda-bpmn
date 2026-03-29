@@ -19,7 +19,9 @@ public class EngineProviderRegistry {
 
     public EngineProviderRegistry(List<ProcessEngineProvider> providers, ScorpioCamundaEngineProperties properties) throws IllegalAccessException {
         log.info("init EngineProviderRegistry");
-        Map<String, ProcessEngineProvider> collect = providers.stream().collect(Collectors.toMap(ProcessEngineProvider::engineName, provider -> provider));
+        Map<String, ProcessEngineProvider> collect = providers
+                .stream()
+                .collect(Collectors.toMap(ProcessEngineProvider::engineName, provider -> provider));
         providersMap = Collections.unmodifiableMap(collect);
 
         ProcessEngineProvider defaultProcessEngineProvider = providersMap.get(properties.getDefaultProcessEngineName());
@@ -37,6 +39,10 @@ public class EngineProviderRegistry {
 
     public Map<String, ProcessEngineProvider> getProvidersMap() {
         return providersMap;
+    }
+
+    public ProcessEngineProvider getDefaultProcessEngineProvider() {
+        return providersMap.get(defaultProcessEngineName);
     }
 
 }

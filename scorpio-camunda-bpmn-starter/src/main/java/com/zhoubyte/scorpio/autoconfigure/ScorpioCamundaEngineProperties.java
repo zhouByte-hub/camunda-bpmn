@@ -9,6 +9,8 @@ public class ScorpioCamundaEngineProperties {
     private Boolean enabled;
 
     public ScorpioCamundaEngineProperties() {
+        this.defaultProcessEngineName = "camunda";
+        this.enabled = true;
     }
 
     public ScorpioCamundaEngineProperties(String defaultProcessEngineName, Boolean enabled) {

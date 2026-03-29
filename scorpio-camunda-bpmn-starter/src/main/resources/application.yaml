@@ -1,3 +1,7 @@
 spring:
   application:
     name: scorpio-camunda-bpmn-starter
+
+scorpio:
+  default-process-engine-name: camunda
+  enabled: true

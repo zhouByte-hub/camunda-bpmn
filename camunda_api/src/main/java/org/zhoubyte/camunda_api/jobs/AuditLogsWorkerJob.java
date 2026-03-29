@@ -54,9 +54,10 @@ public class AuditLogsWorkerJob {
                         .send()
                         .join();
             }
-            log.info("[审计日志] responsibility = {}, elementId={}, userTaskKey={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
+            log.info("[审计日志] responsibility = {}, elementId={},elementInstanceKey={}, userTaskKey={}, processInstanceKey={} 任务正在执行，流程实例参数如下：{}",
                     responsibility,
                     activatedJob.getElementId(),
+                    activatedJob.getElementInstanceKey(),
                     activatedJob.getUserTask().getUserTaskKey(),
                     activatedJob.getProcessInstanceKey(),
                     activatedJob.getVariablesAsMap());
