@@ -1,12 +1,11 @@
 package com.zhoubyte.scorpio.spi;
 
 
-import com.zhoubyte.scorpio.support.DeployResult;
-import com.zhoubyte.scorpio.support.ElementInstanceResult;
-import com.zhoubyte.scorpio.support.ElementQuery;
-import com.zhoubyte.scorpio.support.PageRequest;
+import com.zhoubyte.scorpio.dto.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 // 流程引擎提供者
 public interface ProcessEngineProvider {
@@ -19,5 +18,14 @@ public interface ProcessEngineProvider {
 
     List<ElementInstanceResult> executeElementInstanceSearchQuery(PageRequest pageRequest, ElementQuery instanceQuery);
 
+    MessagePublishResult publishMessage(String messageName, String correlationKey, Map<String, Object> variables);
+
+    List<ActivityMessageSubscription> searchActivityMessageSubscriptions(String messageName);
+
+    List<CorrelationMessageSubscription> searchCorrelatedMessageSubscriptions(String messageName);
+
+    Boolean completeUserTask(Long taskKey, Map<String, Object> variables);
+
+    Optional<BpmnUserTask> searchUserTask(Long taskKey);
 
 }

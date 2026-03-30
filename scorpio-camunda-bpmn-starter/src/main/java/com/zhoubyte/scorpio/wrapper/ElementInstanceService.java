@@ -1,9 +1,9 @@
 package com.zhoubyte.scorpio.wrapper;
 
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
-import com.zhoubyte.scorpio.support.ElementInstanceResult;
-import com.zhoubyte.scorpio.support.ElementQuery;
-import com.zhoubyte.scorpio.support.PageRequest;
+import com.zhoubyte.scorpio.dto.ElementInstanceResult;
+import com.zhoubyte.scorpio.dto.ElementQuery;
+import com.zhoubyte.scorpio.dto.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

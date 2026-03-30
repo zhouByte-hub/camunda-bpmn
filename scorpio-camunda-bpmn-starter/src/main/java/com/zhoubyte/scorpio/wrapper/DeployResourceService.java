@@ -1,7 +1,7 @@
 package com.zhoubyte.scorpio.wrapper;
 
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
-import com.zhoubyte.scorpio.support.DeployResult;
+import com.zhoubyte.scorpio.dto.DeployResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

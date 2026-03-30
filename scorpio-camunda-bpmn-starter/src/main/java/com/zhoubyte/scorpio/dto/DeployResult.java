@@ -1,4 +1,4 @@
-package com.zhoubyte.scorpio.support;
+package com.zhoubyte.scorpio.dto;
 
 import java.util.List;
 

@@ -1,25 +1,28 @@
 package com.zhoubyte.scorpio.provider;
 
+import com.zhoubyte.scorpio.dto.*;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
-import com.zhoubyte.scorpio.support.DeployResult;
-import com.zhoubyte.scorpio.support.ElementInstanceResult;
-import com.zhoubyte.scorpio.support.ElementQuery;
-import com.zhoubyte.scorpio.support.PageRequest;
 import io.camunda.client.CamundaClient;
+import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
 import io.camunda.client.api.command.DeployResourceCommandStep1;
+import io.camunda.client.api.command.PublishMessageCommandStep1;
 import io.camunda.client.api.response.DeploymentEvent;
+import io.camunda.client.api.response.PublishMessageResponse;
 import io.camunda.client.api.search.enums.ElementInstanceState;
 import io.camunda.client.api.search.enums.ElementInstanceType;
 import io.camunda.client.api.search.filter.ElementInstanceFilter;
 import io.camunda.client.api.search.request.ElementInstanceSearchRequest;
 import io.camunda.client.api.search.response.ElementInstance;
+import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.sort.ElementInstanceSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CamundaProcessEngineProvider implements ProcessEngineProvider {
 
@@ -160,4 +163,127 @@ public class CamundaProcessEngineProvider implements ProcessEngineProvider {
         }
     }
 
+
+
+    @Override
+    public MessagePublishResult publishMessage(String messageName, String correlationKey, Map<String, Object> variables) {
+        if(!StringUtils.hasText(messageName)) {
+            throw new IllegalArgumentException("messageName must not be empty");
+        }
+        if(!StringUtils.hasText(correlationKey)) {
+            throw new IllegalArgumentException("correlationKey must not be empty");
+        }
+        PublishMessageCommandStep1.PublishMessageCommandStep3 publishMessageCommandStep3 = camundaClient.newPublishMessageCommand()
+                .messageName(messageName)
+                .correlationKey(correlationKey);
+        if(variables != null) {
+            publishMessageCommandStep3.variables(variables);
+        }
+        PublishMessageResponse response = publishMessageCommandStep3.send().join();
+        return new MessagePublishResult(response.getMessageKey(), response.getTenantId());
+    }
+
+    @Override
+    public List<ActivityMessageSubscription> searchActivityMessageSubscriptions(String messageName) {
+        if(!StringUtils.hasText(messageName)) {
+            throw new IllegalArgumentException("messageName must not be empty");
+        }
+        return camundaClient.newMessageSubscriptionSearchRequest()
+                .filter(f -> f.messageName(messageName))
+                .send()
+                .join()
+                .items().stream().map(item -> {
+                    ActivityMessageSubscription activityMessageSubscription = new ActivityMessageSubscription();
+                    activityMessageSubscription.setMessageSubscriptionKey(item.getMessageSubscriptionKey());
+                    activityMessageSubscription.setProcessDefinitionId(item.getProcessDefinitionId());
+                    activityMessageSubscription.setProcessDefinitionKey(item.getProcessDefinitionKey());
+                    activityMessageSubscription.setElementInstanceKey(item.getElementInstanceKey());
+                    activityMessageSubscription.setElementId(item.getElementId());
+                    activityMessageSubscription.setElementInstanceKey(item.getElementInstanceKey());
+                    activityMessageSubscription.setMessageSubscriptionState(item.getMessageSubscriptionState().name());
+                    activityMessageSubscription.setLastUpdatedDate(item.getLastUpdatedDate());
+                    activityMessageSubscription.setMessageName(item.getMessageName());
+                    activityMessageSubscription.setCorrelationKey(item.getCorrelationKey());
+                    activityMessageSubscription.setTenantId(item.getTenantId());
+                    return activityMessageSubscription;
+                }).toList();
+    }
+
+    @Override
+    public List<CorrelationMessageSubscription> searchCorrelatedMessageSubscriptions(String messageName) {
+        if(!StringUtils.hasText(messageName)) {
+            throw new IllegalArgumentException("messageName must not be empty");
+        }
+        return camundaClient.newCorrelatedMessageSubscriptionSearchRequest()
+                .filter(f -> f.messageName(messageName))
+                .send().join()
+                .items().stream().map(item -> {
+                    CorrelationMessageSubscription correlationMessageSubscription = new CorrelationMessageSubscription();
+                    correlationMessageSubscription.setCorrelationKey(item.getCorrelationKey());
+                    correlationMessageSubscription.setCorrelationTime(item.getCorrelationTime());
+                    correlationMessageSubscription.setElementId(item.getElementId());
+                    correlationMessageSubscription.setElementInstanceKey(item.getElementInstanceKey());
+                    correlationMessageSubscription.setMessageKey(item.getMessageKey());
+                    correlationMessageSubscription.setMessageName(item.getMessageName());
+                    correlationMessageSubscription.setPartitionId(item.getPartitionId());
+                    correlationMessageSubscription.setProcessDefinitionId(item.getProcessDefinitionId());
+                    correlationMessageSubscription.setProcessInstanceKey(item.getProcessInstanceKey());
+                    correlationMessageSubscription.setProcessInstanceKey(item.getProcessInstanceKey());
+                    correlationMessageSubscription.setSubscriptionKey(item.getSubscriptionKey());
+                    correlationMessageSubscription.setTenantId(item.getTenantId());
+                    return correlationMessageSubscription;
+                }).toList();
+    }
+
+
+    @Override
+    public Boolean completeUserTask(Long taskKey, Map<String, Object> variables) {
+        if(taskKey == null) {
+            throw new IllegalArgumentException("taskKey must not be empty");
+        }
+        try{
+            CompleteUserTaskCommandStep1 completeUserTaskCommandStep1 = camundaClient.newCompleteUserTaskCommand(taskKey);
+            if(variables != null) {
+                completeUserTaskCommandStep1.variables(variables);
+            }
+            completeUserTaskCommandStep1.send().join();
+        } catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<BpmnUserTask> searchUserTask(Long taskKey) {
+        if(taskKey == null) {
+            throw new IllegalArgumentException("taskKey must not be empty");
+        }
+        UserTask task = camundaClient.newUserTaskGetRequest(taskKey).send().join();
+        if(task != null) {
+            BpmnUserTask bpmnUserTask = new BpmnUserTask();
+            bpmnUserTask.setUserTaskKey(task.getUserTaskKey());
+            bpmnUserTask.setName(task.getName());
+            bpmnUserTask.setStatus(task.getState().name());
+            bpmnUserTask.setAssignee(task.getAssignee());
+            bpmnUserTask.setElementId(task.getElementId());
+            bpmnUserTask.setElementInstanceKey(task.getElementInstanceKey());
+            bpmnUserTask.setCandidateUsers(task.getCandidateUsers());
+            bpmnUserTask.setCandidateGroups(task.getCandidateGroups());
+            bpmnUserTask.setBpmnProcessId(task.getBpmnProcessId());
+            bpmnUserTask.setProcessDefinitionKey(task.getProcessDefinitionKey());
+            bpmnUserTask.setProcessInstanceKey(task.getProcessInstanceKey());
+            bpmnUserTask.setFormKey(task.getFormKey());
+            bpmnUserTask.setCreationDate(task.getCreationDate());
+            bpmnUserTask.setCompletionDate(task.getCompletionDate());
+            bpmnUserTask.setFollowUpdate(task.getFollowUpDate());
+            bpmnUserTask.setDueDate(task.getDueDate());
+            bpmnUserTask.setTenantId(task.getTenantId());
+            bpmnUserTask.setExternalFormReference(task.getExternalFormReference());
+            bpmnUserTask.setProcessDefinitionVersion(task.getProcessDefinitionVersion());
+            bpmnUserTask.setCustomHeaders(task.getCustomHeaders());
+            bpmnUserTask.setPriority(task.getPriority());
+            return Optional.of(bpmnUserTask);
+        }
+        return Optional.empty();
+    }
 }

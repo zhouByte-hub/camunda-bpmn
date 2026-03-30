@@ -1,4 +1,4 @@
-package com.zhoubyte.scorpio.support;
+package com.zhoubyte.scorpio.dto;
 
 public class PageRequest {
 

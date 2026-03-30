@@ -1,14 +1,13 @@
 package com.zhoubyte.scorpio.wrapper;
 
+import com.zhoubyte.scorpio.dto.*;
 import com.zhoubyte.scorpio.spi.EngineProviderRegistry;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
-import com.zhoubyte.scorpio.support.DeployResult;
-import com.zhoubyte.scorpio.support.ElementInstanceResult;
-import com.zhoubyte.scorpio.support.ElementQuery;
-import com.zhoubyte.scorpio.support.PageRequest;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * 对外界暴露的操作类
@@ -16,7 +15,6 @@ import java.util.List;
 public class ProcessService {
 
     private final ElementInstanceService elementInstanceService;
-    private final FormResourceService formResourceService;
     private final MessageService messageService;
     private final ProcessDefinitionService processDefinitionService;
     private final ProcessInstanceService processInstanceService;
@@ -26,7 +24,6 @@ public class ProcessService {
     public ProcessService(EngineProviderRegistry engineProviderRegistry) {
         ProcessEngineProvider defaultProcessEngineProvider = engineProviderRegistry.getDefaultProcessEngineProvider();
         this.elementInstanceService = new ElementInstanceService(defaultProcessEngineProvider);
-        this.formResourceService = new FormResourceService(defaultProcessEngineProvider);
         this.messageService = new MessageService(defaultProcessEngineProvider);
         this.processDefinitionService = new ProcessDefinitionService(defaultProcessEngineProvider);
         this.processInstanceService = new ProcessInstanceService(defaultProcessEngineProvider);
@@ -71,5 +68,55 @@ public class ProcessService {
         return this.elementInstanceService.executeElementInstanceSearchQuery(pageRequest, instanceQuery);
     }
 
+
+    /**
+     * 发布消息
+     * @param messageName 消息名称
+     * @param correlationName 关联 Key
+     * @param variables 参数信息
+     * @return 发布结果
+     */
+    public MessagePublishResult publishMessage(String messageName, String correlationName, Map<String, Object> variables) {
+        return this.messageService.publishMessage(messageName, correlationName, variables);
+    }
+
+
+    /**
+     * 查询订阅了 MessageName但还未关联的订阅者信息
+     * @param messageName 消息名称
+     * @return 订阅者列表
+     */
+    public List<ActivityMessageSubscription> searchActivityMessageSubscription(String messageName) {
+        return this.messageService.searchActivityMessageSubscription(messageName);
+    }
+
+    /**
+     * 查询订阅了 MessageName且已经关联的订阅者信息
+     * @param messageName 消息名称
+     * @return 订阅者列表
+     */
+    public List<CorrelationMessageSubscription> searchCorrelationMessageSubscription(String messageName) {
+        return this.messageService.searchCorrelationMessageSubscription(messageName);
+    }
+
+
+    /**
+     * 完成人工任务
+     * @param userTaskKey 人工任务 Key
+     * @param variables 需要添加到流程实例的参数信息
+     * @return 是否成功
+     */
+    public Boolean completeUserTask(Long userTaskKey, Map<String, Object> variables) {
+        return this.userTaskService.completeUserTask(userTaskKey, variables);
+    }
+
+    /**
+     * 根据人工任务 Key 获取任务信息
+     * @param userTaskKey 人工任务 Key
+     * @return 任务信息
+     */
+    public Optional<BpmnUserTask> searchUserTask(Long userTaskKey) {
+        return this.userTaskService.searchUserTask(userTaskKey);
+    }
 
 }

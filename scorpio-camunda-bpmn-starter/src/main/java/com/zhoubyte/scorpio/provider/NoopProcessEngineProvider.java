@@ -1,14 +1,13 @@
 package com.zhoubyte.scorpio.provider;
 
+import com.zhoubyte.scorpio.dto.*;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
-import com.zhoubyte.scorpio.support.DeployResult;
-import com.zhoubyte.scorpio.support.ElementInstanceResult;
-import com.zhoubyte.scorpio.support.ElementQuery;
-import com.zhoubyte.scorpio.support.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class NoopProcessEngineProvider implements ProcessEngineProvider {
 
@@ -39,6 +38,36 @@ public class NoopProcessEngineProvider implements ProcessEngineProvider {
     public List<ElementInstanceResult> executeElementInstanceSearchQuery(PageRequest pageRequest, ElementQuery instanceQuery) {
         log.info("execute element instance search query from NoopProcessEngineProvider");
         return List.of();
+    }
+
+    @Override
+    public MessagePublishResult publishMessage(String messageName, String correlationKey, Map<String, Object> variables) {
+        log.info("publish message from NoopProcessEngineProvider");
+        return null;
+    }
+
+    @Override
+    public List<ActivityMessageSubscription> searchActivityMessageSubscriptions(String messageName) {
+        log.info("search activity message subscription from NoopProcessEngineProvider");
+        return List.of();
+    }
+
+    @Override
+    public List<CorrelationMessageSubscription> searchCorrelatedMessageSubscriptions(String messageName) {
+        log.info("search correlated message subscription from NoopProcessEngineProvider");
+        return List.of();
+    }
+
+    @Override
+    public Boolean completeUserTask(Long taskKey, Map<String, Object> variables) {
+        log.info("complete user task from NoopProcessEngineProvider");
+        return null;
+    }
+
+    @Override
+    public Optional<BpmnUserTask> searchUserTask(Long taskKey) {
+        log.info("search user task from NoopProcessEngineProvider");
+        return Optional.empty();
     }
 
 }
