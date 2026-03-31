@@ -28,4 +28,8 @@ public interface ProcessEngineProvider {
 
     Optional<BpmnUserTask> searchUserTask(Long taskKey);
 
+    Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey);
+
+
+
 }

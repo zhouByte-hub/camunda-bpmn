@@ -70,4 +70,9 @@ public class NoopProcessEngineProvider implements ProcessEngineProvider {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey) {
+        log.info("query process definition from NoopProcessEngineProvider");
+        return Optional.empty();
+    }
 }

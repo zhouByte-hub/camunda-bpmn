@@ -20,11 +20,13 @@ public class UserTaskService {
     }
 
     public Boolean completeUserTask(Long taskKey, Map<String, Object> variables) {
+        logger.debug("UserTaskService completeUserTask");
         return this.processEngineProvider.completeUserTask(taskKey, variables);
     }
 
 
     public Optional<BpmnUserTask> searchUserTask(Long userTaskKey) {
+        logger.debug("UserTaskService searchUserTask");
         return this.processEngineProvider.searchUserTask(userTaskKey);
     }
 }

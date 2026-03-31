@@ -13,6 +13,7 @@ import io.camunda.client.api.search.enums.ElementInstanceType;
 import io.camunda.client.api.search.filter.ElementInstanceFilter;
 import io.camunda.client.api.search.request.ElementInstanceSearchRequest;
 import io.camunda.client.api.search.response.ElementInstance;
+import io.camunda.client.api.search.response.ProcessDefinition;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.sort.ElementInstanceSort;
 import org.slf4j.Logger;
@@ -283,6 +284,27 @@ public class CamundaProcessEngineProvider implements ProcessEngineProvider {
             bpmnUserTask.setCustomHeaders(task.getCustomHeaders());
             bpmnUserTask.setPriority(task.getPriority());
             return Optional.of(bpmnUserTask);
+        }
+        return Optional.empty();
+    }
+
+
+    @Override
+    public Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey) {
+        if(processDefinitionKey == null) {
+            throw new IllegalArgumentException("processDefinitionKey must not be empty");
+        }
+        ProcessDefinition definition = camundaClient.newProcessDefinitionGetRequest(processDefinitionKey).send().join();
+        if(definition != null) {
+            BpmnProcessDefinition bpmnProcessDefinition = new BpmnProcessDefinition();
+            bpmnProcessDefinition.setProcessDefinitionKey(definition.getProcessDefinitionKey());
+            bpmnProcessDefinition.setName(definition.getName());
+            bpmnProcessDefinition.setResourceName(definition.getResourceName());
+            bpmnProcessDefinition.setVersion(definition.getVersion());
+            bpmnProcessDefinition.setVersionTag(definition.getVersionTag());
+            bpmnProcessDefinition.setProcessDefinitionId(definition.getProcessDefinitionId());
+            bpmnProcessDefinition.setTenantId(definition.getTenantId());
+            return  Optional.of(bpmnProcessDefinition);
         }
         return Optional.empty();
     }
