@@ -119,4 +119,32 @@ public class ProcessService {
         return this.userTaskService.searchUserTask(userTaskKey);
     }
 
+
+    /**
+     * 查询流程定义
+     * @param processDefinitionKey 流程 Key
+     * @return 定义信息
+     */
+    public Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey) {
+        return this.processDefinitionService.queryProcessDefinition(processDefinitionKey);
+    }
+
+    /**
+     * 查询流程实例信息
+     * @param processInstanceKey 流程实例 Key
+     * @return 流程实例信息
+     */
+    public Optional<BpmnProcessInstance> queryProcessInstance(Long processInstanceKey) {
+        return this.processInstanceService.queryProcessInstance(processInstanceKey);
+    }
+
+    /**
+     * 取消流程实例
+     * @param processInstanceKey 流程实例 Key
+     * @return 是否取消成功
+     */
+    public Boolean cancelProcessInstance(Long processInstanceKey) {
+        return this.processInstanceService.cancelProcessInstance(processInstanceKey);
+    }
+
 }

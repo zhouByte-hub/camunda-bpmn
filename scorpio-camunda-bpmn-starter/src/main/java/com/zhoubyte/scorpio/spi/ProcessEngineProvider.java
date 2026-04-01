@@ -30,6 +30,8 @@ public interface ProcessEngineProvider {
 
     Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey);
 
+    Boolean cancelProcessInstance(Long processInstanceKey);
 
+    Optional<BpmnProcessInstance> queryProcessInstance(Long processInstanceKey);
 
 }

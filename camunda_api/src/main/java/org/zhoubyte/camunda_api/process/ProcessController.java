@@ -3,6 +3,7 @@ package org.zhoubyte.camunda_api.process;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.client.api.search.response.ProcessDefinition;
+import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.client.api.search.response.UserTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +69,6 @@ public class ProcessController {
     @GetMapping(value = "/end")
     public String endProcess(@RequestParam("process_instance_id") Long processInstanceId) {
         camundaClient.newCancelInstanceCommand(processInstanceId).send().join();
-        ProcessDefinition join = camundaClient.newProcessDefinitionGetRequest(processInstanceId).send().join();
         return "success";
     }
 

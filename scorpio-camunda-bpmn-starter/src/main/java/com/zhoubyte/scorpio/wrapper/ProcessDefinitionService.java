@@ -1,7 +1,9 @@
 package com.zhoubyte.scorpio.wrapper;
 
+import com.zhoubyte.scorpio.dto.BpmnProcessDefinition;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class ProcessDefinitionService {
@@ -14,6 +16,13 @@ public class ProcessDefinitionService {
         log.info("ProcessEngineProvider init");
     }
 
+    public Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey) {
+        log.info("queryProcessDefinition");
+        if(processDefinitionKey==null){
+            return Optional.empty();
+        }
+        return processEngineProvider.queryProcessDefinition(processDefinitionKey);
+    }
 
 
 

@@ -14,6 +14,7 @@ import io.camunda.client.api.search.filter.ElementInstanceFilter;
 import io.camunda.client.api.search.request.ElementInstanceSearchRequest;
 import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.ProcessDefinition;
+import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.sort.ElementInstanceSort;
 import org.slf4j.Logger;
@@ -305,6 +306,43 @@ public class CamundaProcessEngineProvider implements ProcessEngineProvider {
             bpmnProcessDefinition.setProcessDefinitionId(definition.getProcessDefinitionId());
             bpmnProcessDefinition.setTenantId(definition.getTenantId());
             return  Optional.of(bpmnProcessDefinition);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Boolean cancelProcessInstance(Long processInstanceKey) {
+        if(processInstanceKey == null) {
+            throw new IllegalArgumentException("processInstanceKey must not be empty");
+        }
+        try{
+            camundaClient.newCancelInstanceCommand(processInstanceKey).send().join();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<BpmnProcessInstance> queryProcessInstance(Long processInstanceKey) {
+        ProcessInstance join = camundaClient.newProcessInstanceGetRequest(processInstanceKey).send().join();
+        if(join != null) {
+            BpmnProcessInstance bpmnProcessInstance = new BpmnProcessInstance();
+            bpmnProcessInstance.setProcessInstanceKey(join.getProcessInstanceKey());
+            bpmnProcessInstance.setProcessDefinitionId(join.getProcessDefinitionId());
+            bpmnProcessInstance.setProcessDefinitionName(join.getProcessDefinitionName());
+            bpmnProcessInstance.setProcessDefinitionVersion(join.getProcessDefinitionVersion());
+            bpmnProcessInstance.setProcessDefinitionVersionTag(join.getProcessDefinitionVersionTag());
+            bpmnProcessInstance.setProcessDefinitionKey(join.getProcessDefinitionKey());
+            bpmnProcessInstance.setParentProcessInstanceKey(join.getParentProcessInstanceKey());
+            bpmnProcessInstance.setParentElementInstanceKey(join.getParentElementInstanceKey());
+            bpmnProcessInstance.setStartDate(join.getStartDate());
+            bpmnProcessInstance.setEndDate(join.getEndDate());
+            bpmnProcessInstance.setState(join.getState().name());
+            bpmnProcessInstance.setTenantId(join.getTenantId());
+            bpmnProcessInstance.setTags(join.getTags());
+            bpmnProcessInstance.setHasIncident(join.getHasIncident());
+            return Optional.of(bpmnProcessInstance);
         }
         return Optional.empty();
     }
