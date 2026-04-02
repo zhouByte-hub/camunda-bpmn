@@ -1,0 +1,28 @@
+
+spring:
+  application:
+    name: procure_flow
+server:
+  port: 8080
+  servlet:
+    context-path: /procure
+
+camunda:
+  client:
+    mode: self-managed
+    grpc-address: ENC(3Oz5CdOP1Mxu4Y7u/sn92ZpRMXeUNUJgJoDTXuv0riYpiZcfm5ngZ714RNjkWA1EfS4LxdL/lWuGuLhGIQo5UQ==)
+    rest-address: ENC(WkzegAwa1WfH++IAkRDSGo0OBc6DfiDIDPpnNP58e1TlGoZeaicQP7wORpiDg7O15Znt/VEPceVpwevWX+10Ow==)
+    prefer-rest-over-grpc: false
+    request-timeout: 60s
+    auth:
+      method: basic
+      username: ENC(Xf/tTg4Ji8hl6e21AYzCH8nTUnene5z2Z/Umxq7DKXX54WGYlgiVQeIkh/6+tEql)
+      password: ENC(k15ZkwmrfZeoh+qNf/j1TdvW0MURzPwI44U69rF+5/dChupoXNA0N7mD58tB3Xia)
+    enabled: true
+    worker:
+      defaults:
+        timeout: 30s
+        max-jobs-active: 32
+scorpio:
+  enabled: true
+  default-process-engine-name: camunda
