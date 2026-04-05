@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 对外界暴露的操作类
@@ -145,6 +146,18 @@ public class ProcessService {
      */
     public Boolean cancelProcessInstance(Long processInstanceKey) {
         return this.processInstanceService.cancelProcessInstance(processInstanceKey);
+    }
+
+    /**
+     * 启动流程实例
+     * @param processId 流程ID
+     * @param version   版本号
+     * @param tags      标签
+     * @param variables 参数
+     * @return 启动结果
+     */
+    public StartProcessInstanceResult startProcessInstance(String processId, Integer version, Set<String> tags, Map<String, Object> variables) {
+        return this.processInstanceService.startProcessInstance(processId, version, tags, variables);
     }
 
 }

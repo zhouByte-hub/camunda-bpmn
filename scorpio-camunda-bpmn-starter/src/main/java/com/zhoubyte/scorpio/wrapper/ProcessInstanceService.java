@@ -1,11 +1,14 @@
 package com.zhoubyte.scorpio.wrapper;
 
 import com.zhoubyte.scorpio.dto.BpmnProcessInstance;
+import com.zhoubyte.scorpio.dto.StartProcessInstanceResult;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class ProcessInstanceService {
 
@@ -31,6 +34,11 @@ public class ProcessInstanceService {
             return Optional.empty();
         }
         return processEngineProvider.queryProcessInstance(processInstanceKey);
+    }
+
+    public StartProcessInstanceResult startProcessInstance(String processId, Integer version, Set<String> tags, Map<String, Object> variables) {
+        logger.info("startProcessInstance, processId:{}, version:{}", processId, version);
+        return processEngineProvider.startProcessInstance(processId, version, tags, variables);
     }
 
 
