@@ -21,12 +21,12 @@ spring:
       connection-timeout: 15000
       connection-test-query: SELECT 1
   flyway:
-    enabled: true # ?? Flyway
+    enabled: true
     baseline-on-migrate: true
-    baseline-version: 1
+    baseline-version: 0
     baseline-description: baseline init
     table: flyway_procure_schema_history
-    locations: classpath:db/migration
+    locations: classpath:migration
     validate-on-migrate: true
 
 

@@ -23,15 +23,15 @@ public class CamundaEngineAutoConfigure {
 
 
     @Bean
-    @ConditionalOnProperty(name = "scorpio.enabled", value = "true")
-    @ConditionalOnProperty(name = "scorpio.default-process-engine-name", value = "camunda")
+    @ConditionalOnProperty(name = "scorpio.enabled", havingValue = "true")
+    @ConditionalOnProperty(name = "scorpio.default-process-engine-name", havingValue = "camunda")
     @ConditionalOnMissingBean(CamundaProcessEngineProvider.class)
     public ProcessEngineProvider camundaEngineProvider(CamundaClient camundaClient) {
         return new CamundaProcessEngineProvider(camundaClient);
     }
 
     @Bean
-    @ConditionalOnProperty(name = "scorpio.enabled", value = "false", matchIfMissing = true)
+    @ConditionalOnProperty(name = "scorpio.enabled", havingValue = "false", matchIfMissing = true)
     @ConditionalOnMissingBean(NoopProcessEngineProvider.class)
     public ProcessEngineProvider noopProcessEngineProvider() {
         return new NoopProcessEngineProvider();
