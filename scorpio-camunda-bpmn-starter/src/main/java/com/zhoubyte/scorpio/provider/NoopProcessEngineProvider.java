@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class NoopProcessEngineProvider implements ProcessEngineProvider {
 
@@ -74,5 +75,23 @@ public class NoopProcessEngineProvider implements ProcessEngineProvider {
     public Optional<BpmnProcessDefinition> queryProcessDefinition(Long processDefinitionKey) {
         log.info("query process definition from NoopProcessEngineProvider");
         return Optional.empty();
+    }
+
+    @Override
+    public Boolean cancelProcessInstance(Long processInstanceKey) {
+        log.info("cancel process instance from NoopProcessEngineProvider");
+        return false;
+    }
+
+    @Override
+    public Optional<BpmnProcessInstance> queryProcessInstance(Long processInstanceKey) {
+        log.info("query process instance from NoopProcessEngineProvider");
+        return Optional.empty();
+    }
+
+    @Override
+    public StartProcessInstanceResult startProcessInstance(String processId, Integer version, Set<String> tags, Map<String, Object> variables) {
+        log.info("start process instance from NoopProcessEngineProvider");
+        return null;
     }
 }

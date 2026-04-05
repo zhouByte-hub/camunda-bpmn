@@ -6,6 +6,7 @@ import com.zhoubyte.scorpio.dto.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 // 流程引擎提供者
 public interface ProcessEngineProvider {
@@ -33,5 +34,7 @@ public interface ProcessEngineProvider {
     Boolean cancelProcessInstance(Long processInstanceKey);
 
     Optional<BpmnProcessInstance> queryProcessInstance(Long processInstanceKey);
+
+    StartProcessInstanceResult startProcessInstance(String processId, Integer version, Set<String> tags, Map<String, Object> variables);
 
 }

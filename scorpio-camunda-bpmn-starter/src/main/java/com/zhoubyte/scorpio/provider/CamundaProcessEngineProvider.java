@@ -4,9 +4,11 @@ import com.zhoubyte.scorpio.dto.*;
 import com.zhoubyte.scorpio.spi.ProcessEngineProvider;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
+import io.camunda.client.api.command.CreateProcessInstanceCommandStep1;
 import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.client.api.command.PublishMessageCommandStep1;
 import io.camunda.client.api.response.DeploymentEvent;
+import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.client.api.response.PublishMessageResponse;
 import io.camunda.client.api.search.enums.ElementInstanceState;
 import io.camunda.client.api.search.enums.ElementInstanceType;
@@ -25,6 +27,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class CamundaProcessEngineProvider implements ProcessEngineProvider {
 
@@ -345,5 +348,34 @@ public class CamundaProcessEngineProvider implements ProcessEngineProvider {
             return Optional.of(bpmnProcessInstance);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public StartProcessInstanceResult startProcessInstance(String processId, Integer version, Set<String> tags, Map<String, Object> variables) {
+        if(processId == null) {
+            throw new IllegalArgumentException("processId must not be empty");
+        }
+        CreateProcessInstanceCommandStep1.CreateProcessInstanceCommandStep2 step2 = camundaClient.newCreateInstanceCommand().bpmnProcessId(processId);
+        CreateProcessInstanceCommandStep1.CreateProcessInstanceCommandStep3 step3;
+        if(version != null) {
+           step3 = step2.version(version);
+        }else {
+            step3 = step2.latestVersion();
+        }
+        if(tags != null && !tags.isEmpty()) {
+            step3.tags(tags);
+        }
+        ProcessInstanceEvent join = step3.variables(variables).send().join();
+        if(join != null) {
+            return new StartProcessInstanceResult(
+                    join.getProcessDefinitionKey(),
+                    join.getBpmnProcessId(),
+                    join.getVersion(),
+                    join.getProcessInstanceKey(),
+                    join.getTenantId(),
+                    join.getTags()
+            );
+        }
+        return null;
     }
 }
