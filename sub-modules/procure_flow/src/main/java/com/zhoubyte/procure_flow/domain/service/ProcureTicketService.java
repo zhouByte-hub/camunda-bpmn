@@ -3,32 +3,24 @@ package com.zhoubyte.procure_flow.domain.service;
 import com.zhoubyte.procure_flow.application.dto.TicketCreateParam;
 import com.zhoubyte.procure_flow.domain.model.Ticket;
 import com.zhoubyte.procure_flow.domain.repository.IProcureTicketRepository;
-import com.zhoubyte.procure_flow.domain.valobj.TicketId;
-import com.zhoubyte.procure_flow.domain.valobj.TicketPriority;
-import com.zhoubyte.procure_flow.domain.valobj.TicketStatus;
-import com.zhoubyte.procure_flow.domain.valobj.TicketType;
+import com.zhoubyte.procure_flow.domain.utils.IdGenerator;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketPriority;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketStatus;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class TicketService {
-
-    private static final AtomicInteger sequence = new AtomicInteger(0);
-    private static String currentDate;
+@RequiredArgsConstructor
+public class ProcureTicketService {
 
     private final IProcureTicketRepository ticketRepository;
-
-    public TicketService(IProcureTicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
-        currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-    }
+    private final IdGenerator idGenerator;
 
     public Ticket createTicket(TicketCreateParam ticketCreateParam) {
-        TicketId ticketId = TicketId.form(generateTicketId());
+        TicketId ticketId = TicketId.form(idGenerator.generateTicketId());
         Ticket ticket = Ticket.builder()
                 .ticketId(ticketId)
                 .ticketName(ticketCreateParam.getTicketName())
@@ -42,23 +34,11 @@ public class TicketService {
                 .postOverdueDays(ticketCreateParam.getPostOverdueDays())
                 .creatorName(ticketCreateParam.getCreatorName())
                 .creatorId(ticketCreateParam.getCreatorId())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
                 .build();
         ticket = ticketRepository.saveOrUpdate(ticket);
         return this.changeTicketStatus(ticket, ticketCreateParam.getCreatorId(), ticketCreateParam.getCreatorName(), TicketStatus.PROCESSING);
     }
 
-
-    private String generateTicketId() {
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        if(!today.equals(currentDate)){
-            currentDate = today;
-            sequence.set(0);
-        }
-        int seq = sequence.incrementAndGet();
-        return "TICKET_" + currentDate + String.format("%05d", seq);
-    }
 
 
     private Ticket changeTicketStatus(Ticket ticket, String operatorId, String operatorName, TicketStatus expectedStatus) {

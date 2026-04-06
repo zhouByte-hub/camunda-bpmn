@@ -1,6 +1,6 @@
 package com.zhoubyte.procure_flow.facade.dto.response;
 
-import com.zhoubyte.procure_flow.domain.valobj.TicketId;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 

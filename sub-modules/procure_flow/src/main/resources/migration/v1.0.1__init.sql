@@ -36,13 +36,18 @@ COMMENT ON COLUMN "procure_ticket"."update_time" IS '更新时间';
 
 
 CREATE TABLE IF NOT EXISTS "procure_task" (
-    "id" bigint NOT NULL,
+    "id" varchar(64) NOT NULL,
     "ticket_id" varchar(64) NOT NULL,
-    "process_instance_id" int4 NOT NULL,
-    "process_instance_key" varchar(64) NOT NULL,
-    "element_id" int4 NOT NULL,
-    "element_instance_key" varchar(64) NOT NULL,
+    "task_type" varchar(64) NOT NULL,
+    "process_definition_version" int4 NOT NULL,
+    "process_definition_key" int8 NOT NULL,
+    "process_instance_id" varchar(64) NOT NULL,
+    "process_instance_key" int8 NOT NULL,
+    "element_id" varchar(64) NOT NULL,
+    "element_instance_key" int8 NOT NULL,
     "task_status" varchar(32) NOT NULL,
+    "retries" int4 NOT NULL DEFAULT 0,
+    "variables" json,
     "create_time" timestamp NOT NULL,
     "update_time" timestamp NOT NULL,
     PRIMARY KEY ("id")

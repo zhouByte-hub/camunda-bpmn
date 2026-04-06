@@ -1,4 +1,4 @@
-package com.zhoubyte.procure_flow.domain.valobj;
+package com.zhoubyte.procure_flow.domain.valobj.ticket;
 
 import lombok.Getter;
 import org.springframework.util.StringUtils;

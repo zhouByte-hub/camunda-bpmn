@@ -1,7 +1,7 @@
 package com.zhoubyte.procure_flow.facade.endpoint;
 
 import com.zhoubyte.procure_flow.application.dto.TicketCreateParam;
-import com.zhoubyte.procure_flow.application.service.ProcureTicketService;
+import com.zhoubyte.procure_flow.application.service.ProcureCreateTicketService;
 import com.zhoubyte.procure_flow.domain.service.UserService;
 import com.zhoubyte.procure_flow.facade.converter.ProcureTicketFacadeConverter;
 import com.zhoubyte.procure_flow.facade.dto.request.TicketCreateRequest;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProcureFlowTicketController {
 
-    private final ProcureTicketService ticketService;
+    private final ProcureCreateTicketService ticketService;
     private final UserService userService;  // 模拟登录的用户信息
     private final ProcureTicketFacadeConverter procureTicketFacadeConverter;
 

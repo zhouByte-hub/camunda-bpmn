@@ -1,9 +1,9 @@
 package com.zhoubyte.procure_flow.domain.model;
 
-import com.zhoubyte.procure_flow.domain.valobj.TicketId;
-import com.zhoubyte.procure_flow.domain.valobj.TicketPriority;
-import com.zhoubyte.procure_flow.domain.valobj.TicketStatus;
-import com.zhoubyte.procure_flow.domain.valobj.TicketType;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketPriority;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketStatus;
+import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketType;
 import lombok.Builder;
 import lombok.Data;
 

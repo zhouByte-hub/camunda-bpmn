@@ -8,6 +8,8 @@ import com.zhoubyte.procure_flow.infra.persistence.dao.ProcureTicketMapper;
 import com.zhoubyte.procure_flow.infra.persistence.po.ProcureTicket;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public class ProcureTicketRepository implements IProcureTicketRepository {
 
@@ -29,8 +31,11 @@ public class ProcureTicketRepository implements IProcureTicketRepository {
                 .exists(Wrappers.<ProcureTicket>lambdaQuery().eq(ProcureTicket::getTicketId, procureTicket.getTicketId()));
         int result;
         if(exists) {
+            procureTicket.setUpdateTime(LocalDateTime.now());
             result = procureTicketMapper.updateById(procureTicket);
         }else{
+            procureTicket.setCreateTime(LocalDateTime.now());
+            procureTicket.setUpdateTime(LocalDateTime.now());
             result = procureTicketMapper.insert(procureTicket);
         }
         if(result <= 0) {
