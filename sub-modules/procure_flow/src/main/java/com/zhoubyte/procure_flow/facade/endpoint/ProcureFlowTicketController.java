@@ -5,7 +5,9 @@ import com.zhoubyte.procure_flow.application.service.ProcureCreateTicketService;
 import com.zhoubyte.procure_flow.domain.service.UserService;
 import com.zhoubyte.procure_flow.facade.converter.ProcureTicketFacadeConverter;
 import com.zhoubyte.procure_flow.facade.dto.request.TicketCreateRequest;
+import com.zhoubyte.procure_flow.facade.dto.request.TicketSearchRequestParams;
 import com.zhoubyte.procure_flow.facade.dto.response.TicketCreateResponse;
+import com.zhoubyte.procure_flow.facade.dto.response.TicketSearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +37,11 @@ public class ProcureFlowTicketController {
             return TicketCreateResponse.fail(e.getMessage());
         }
         return response;
+    }
+
+
+    @PostMapping(value = "/list")
+    public TicketSearchResponse ticketList(@RequestBody TicketSearchRequestParams ticketSearchRequestParams){
+        return ticketService.ticketList(ticketSearchRequestParams);
     }
 }

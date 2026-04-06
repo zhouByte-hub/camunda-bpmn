@@ -10,6 +10,7 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="create_job_and_record_log" />
         </zeebe:taskListeners>
+        <zeebe:assignmentDefinition candidateGroups="开发部" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1twegwu</bpmn:incoming>
       <bpmn:incoming>Flow_0fuvnjf</bpmn:incoming>
@@ -23,6 +24,7 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="create_job_and_record_log" />
         </zeebe:taskListeners>
+        <zeebe:assignmentDefinition candidateGroups="开发部" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_07473u3</bpmn:incoming>
       <bpmn:outgoing>Flow_0i51utp</bpmn:outgoing>
@@ -73,6 +75,7 @@
         <zeebe:taskListeners>
           <zeebe:taskListener eventType="creating" retries="3" type="create_job_and_record_log" />
         </zeebe:taskListeners>
+        <zeebe:assignmentDefinition candidateGroups="总经理" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0uhnpsg</bpmn:incoming>
       <bpmn:outgoing>Flow_04520h2</bpmn:outgoing>

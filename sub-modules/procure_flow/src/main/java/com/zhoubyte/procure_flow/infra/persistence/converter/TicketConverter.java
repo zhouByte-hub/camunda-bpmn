@@ -17,4 +17,12 @@ public interface TicketConverter {
     })
     ProcureTicket convertTicket(Ticket ticket);
 
+
+    @Mappings({
+            @Mapping(target = "ticketId", expression = "java(com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId.form(procureTicket.getTicketId()))"),
+            @Mapping(target = "ticketType", expression = "java(com.zhoubyte.procure_flow.domain.valobj.ticket.TicketType.valueOf(procureTicket.getTicketType()))"),
+            @Mapping(target = "ticketPriority", expression = "java(com.zhoubyte.procure_flow.domain.valobj.ticket.TicketPriority.fromValue(procureTicket.getTicketPriority()))"),
+            @Mapping(target = "ticketStatus", expression = "java(com.zhoubyte.procure_flow.domain.valobj.ticket.TicketStatus.fromValue(procureTicket.getTicketStatus()))")
+    })
+    Ticket convertProcureTicket(ProcureTicket procureTicket);
 }

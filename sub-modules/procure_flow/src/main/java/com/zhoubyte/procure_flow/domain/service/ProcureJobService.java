@@ -1,5 +1,7 @@
 package com.zhoubyte.procure_flow.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhoubyte.procure_flow.application.config.ProcureTicketConstant;
 import com.zhoubyte.procure_flow.application.dto.CreateJobParam;
 import com.zhoubyte.procure_flow.domain.model.Task;
@@ -23,9 +25,9 @@ public class ProcureJobService {
         this.idGenerator = idGenerator;
     }
 
-    public Task persistenceTask(CreateJobParam procureJobService){
-        String generateTaskId = idGenerator.generateTaskId(procureJobService.getTaskType());
-        Map<String, Object> variables = procureJobService.getVariablesAsMap();
+    public Task persistenceTask(CreateJobParam createJobParam){
+        String generateTaskId = idGenerator.generateTaskId(createJobParam.getTaskType());
+        Map<String, Object> variables = createJobParam.getVariablesAsMap();
         if (variables == null) {
             throw new RuntimeException("variables is null");
         }
@@ -33,18 +35,34 @@ public class ProcureJobService {
         Task build = Task.builder()
                 .id(TaskId.form(generateTaskId))
                 .ticketId(TicketId.form(ticketId))
-                .taskType(procureJobService.getTaskType())
-                .processDefinitionVersion(procureJobService.getProcessDefinitionVersion())
-                .processDefinitionKey(procureJobService.getProcessDefinitionKey())
-                .processInstanceId(procureJobService.getProcessInstanceId())
-                .processInstanceKey(procureJobService.getProcessInstanceKey())
-                .elementId(procureJobService.getElementId())
-                .elementInstanceKey(procureJobService.getElementInstanceKey())
+                .taskType(createJobParam.getTaskType())
+                .processDefinitionVersion(createJobParam.getProcessDefinitionVersion())
+                .processDefinitionKey(createJobParam.getProcessDefinitionKey())
+                .processInstanceId(createJobParam.getProcessInstanceId())
+                .processInstanceKey(createJobParam.getProcessInstanceKey())
+                .elementId(createJobParam.getElementId())
+                .elementInstanceKey(createJobParam.getElementInstanceKey())
                 .taskStatus(TaskStatus.CREATE)
-                .retries(procureJobService.getRetries())
-                .variables(procureJobService.getVariables())
+                .retries(createJobParam.getRetries())
+                .variables(createJobParam.getVariables())
                 .build();
-
+        if(createJobParam.getCandidateGroups() != null && !createJobParam.getCandidateGroups().isEmpty()){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String candidateGroupsJson = objectMapper.writeValueAsString(createJobParam.getCandidateGroups());
+                build.setCandidateGroups(candidateGroupsJson);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Failed to convert candidate groups to JSON", e);
+            }
+        }
         return procureTaskRepository.saveOrUpdate(build);
+    }
+
+    public Boolean updateTask(Task task){
+        if (task == null || task.getId() == null) {
+            throw new IllegalArgumentException("Task or TaskId cannot be null");
+        }
+        Task savedTask = procureTaskRepository.saveOrUpdate(task);
+        return savedTask != null;
     }
 }

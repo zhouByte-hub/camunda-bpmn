@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS "procure_task" (
     "task_status" varchar(32) NOT NULL,
     "retries" int4 NOT NULL DEFAULT 0,
     "variables" json,
+    "task_key" int8 NOT NULL,
+    "candidate_groups" varchar(128),
     "create_time" timestamp NOT NULL,
     "update_time" timestamp NOT NULL,
     PRIMARY KEY ("id")

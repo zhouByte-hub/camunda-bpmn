@@ -46,6 +46,12 @@ public class ProcureTask {
     @TableField("variables")
     private String variables;               // 参数信息
 
+    @TableField("task_key")
+    private Long taskKey;                   // 任务 Key
+
+    @TableField("candidate_groups")
+    private String candidateGroups;         // 候选审核组
+
     @TableField("create_time")
     private LocalDateTime createTime;       // 创建时间
 

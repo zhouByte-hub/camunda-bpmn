@@ -1,9 +1,14 @@
 package com.zhoubyte.procure_flow.application.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhoubyte.procure_flow.application.config.ProcureTicketConstant;
 import com.zhoubyte.procure_flow.application.dto.TicketCreateParam;
 import com.zhoubyte.procure_flow.domain.model.Ticket;
+import com.zhoubyte.procure_flow.domain.repository.IProcureTicketRepository;
+import com.zhoubyte.procure_flow.domain.service.ProcureTicketService;
 import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId;
+import com.zhoubyte.procure_flow.facade.dto.request.TicketSearchRequestParams;
+import com.zhoubyte.procure_flow.facade.dto.response.TicketSearchResponse;
 import com.zhoubyte.scorpio.dto.StartProcessInstanceResult;
 import com.zhoubyte.scorpio.wrapper.ProcessService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +23,9 @@ import java.util.Map;
 @Slf4j
 public class ProcureCreateTicketService {
 
-    private final com.zhoubyte.procure_flow.domain.service.ProcureTicketService ticketService;
+    private final ProcureTicketService ticketService;
     private final ProcessService processService;
+    private final IProcureTicketRepository iProcureTicketRepository;
 
     public TicketId createTicket(TicketCreateParam ticketCreateParam) {
         Ticket ticket = ticketService.createTicket(ticketCreateParam);
@@ -45,6 +51,15 @@ public class ProcureCreateTicketService {
             throw new RuntimeException("流程实例启动失败");
         }
         return ticket.getTicketId();
+    }
+
+    public TicketSearchResponse ticketList(TicketSearchRequestParams ticketSearchRequestParams) {
+        Page<Ticket> ticketPage = iProcureTicketRepository.queryTicketList(ticketSearchRequestParams);
+        TicketSearchResponse ticketSearchResponse = new TicketSearchResponse();
+        ticketSearchResponse.setTicketList(ticketPage.getRecords());
+        ticketSearchResponse.setTotal(ticketPage.getTotal());
+        ticketSearchResponse.setCurrentPage(ticketSearchResponse.getCurrentPage());
+        return ticketSearchResponse;
     }
 
 }

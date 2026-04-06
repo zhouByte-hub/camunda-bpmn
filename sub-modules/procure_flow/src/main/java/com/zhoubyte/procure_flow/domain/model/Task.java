@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Task {
 
     private TaskId id;
+    private Long taskKey;
     private TicketId ticketId;
     private String taskType;
     private Integer processDefinitionVersion;
@@ -24,6 +25,7 @@ public class Task {
     private TaskStatus taskStatus;
     private Integer retries;
     private String variables;
+    private String candidateGroups;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
