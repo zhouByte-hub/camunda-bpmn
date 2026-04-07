@@ -9,6 +9,7 @@ import com.zhoubyte.procure_flow.infra.persistence.po.ProcureTask;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public class ProcureTaskRepository implements IProcureTaskRepository {
@@ -38,5 +39,19 @@ public class ProcureTaskRepository implements IProcureTaskRepository {
             throw new RuntimeException("operator database fail form task");
         }
         return task;
+    }
+
+    @Override
+    public Optional<Task> findByTaskKey(Long taskKey) {
+        if (taskKey == null) {
+            return Optional.empty();
+        }
+        ProcureTask procureTask = procureTaskMapper.selectOne(
+                Wrappers.<ProcureTask>lambdaQuery().eq(ProcureTask::getTaskKey, taskKey)
+        );
+        if (procureTask == null) {
+            return Optional.empty();
+        }
+        return Optional.of(taskConverter.toTask(procureTask));
     }
 }

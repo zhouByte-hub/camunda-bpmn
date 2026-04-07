@@ -22,4 +22,5 @@ public class CreateJobParam {
     private String variables;
     private Map<String, Object> variablesAsMap;
     private List<String> candidateGroups;
+    private String assignee;
 }

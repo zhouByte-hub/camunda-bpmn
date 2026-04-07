@@ -23,7 +23,8 @@ public class ProcureCreateJobWorker {
     @JobWorker(type = "create_job_and_record_log")
     public void createJobAndRecordLog(ActivatedJob activatedJob){
         log.info("createJobWorker.createJobAndRecordLog job = {}", activatedJob);
-        CreateJobParam build = CreateJobParam.builder()
+        
+        CreateJobParam.CreateJobParamBuilder builder = CreateJobParam.builder()
                 .taskKey(activatedJob.getKey())
                 .taskType(activatedJob.getType())
                 .processDefinitionVersion(activatedJob.getProcessDefinitionVersion())
@@ -34,17 +35,28 @@ public class ProcureCreateJobWorker {
                 .elementInstanceKey(activatedJob.getElementInstanceKey())
                 .retries(activatedJob.getRetries())
                 .variables(activatedJob.getVariables())
-                .variablesAsMap(activatedJob.getVariablesAsMap())
-                .build();
+                .variablesAsMap(activatedJob.getVariablesAsMap());
+        
         UserTaskProperties userTask = activatedJob.getUserTask();
         if(userTask != null){
             List<String> candidateGroups = userTask.getCandidateGroups();
             if(candidateGroups != null && !candidateGroups.isEmpty()){
-                build.setCandidateGroups(candidateGroups);
+                builder.candidateGroups(candidateGroups);
             }else{
-                build.setCandidateGroups(List.of("System"));
+                builder.candidateGroups(List.of("System"));
             }
+            
+            String assignee = userTask.getAssignee();
+            if(assignee != null && !assignee.isEmpty()){
+                builder.assignee(assignee);
+            }else{
+                builder.assignee("System");
+            }
+        }else{
+            builder.candidateGroups(List.of("System"));
+            builder.assignee("System");
         }
-        procureJobCreateService.createJobAndRecordLog(build);
+        
+        procureJobCreateService.createJobAndRecordLog(builder.build());
     }
 }

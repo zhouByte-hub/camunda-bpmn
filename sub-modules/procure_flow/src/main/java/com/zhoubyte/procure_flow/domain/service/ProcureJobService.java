@@ -13,6 +13,7 @@ import com.zhoubyte.procure_flow.domain.valobj.ticket.TicketId;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ProcureJobService {
@@ -45,6 +46,7 @@ public class ProcureJobService {
                 .taskStatus(TaskStatus.CREATE)
                 .retries(createJobParam.getRetries())
                 .variables(createJobParam.getVariables())
+                .assignee(createJobParam.getAssignee())
                 .build();
         if(createJobParam.getCandidateGroups() != null && !createJobParam.getCandidateGroups().isEmpty()){
             ObjectMapper objectMapper = new ObjectMapper();
@@ -64,5 +66,9 @@ public class ProcureJobService {
         }
         Task savedTask = procureTaskRepository.saveOrUpdate(task);
         return savedTask != null;
+    }
+
+    public Optional<Task> findByTaskKey(Long taskKey) {
+        return procureTaskRepository.findByTaskKey(taskKey);
     }
 }

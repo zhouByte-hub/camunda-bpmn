@@ -19,4 +19,13 @@ public enum TaskStatus {
         this.description = description;
     }
 
+    public static TaskStatus fromValue(String value) {
+        for (TaskStatus status : TaskStatus.values()) {
+            if (status.getValue().equals(value)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown TaskStatus value: " + value);
+    }
+
 }

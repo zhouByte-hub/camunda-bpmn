@@ -35,8 +35,12 @@
       <bpmn:outgoing>Flow_1mmbl9v</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0i51utp" sourceRef="leader_audit" targetRef="Gateway_1i10f3o" />
-    <bpmn:sequenceFlow id="Flow_0fuvnjf" name="审批不通过" sourceRef="Gateway_1i10f3o" targetRef="submit_apply_form" />
-    <bpmn:sequenceFlow id="Flow_1mmbl9v" sourceRef="Gateway_1i10f3o" targetRef="Gateway_0jx7bil" />
+    <bpmn:sequenceFlow id="Flow_0fuvnjf" name="审批不通过" sourceRef="Gateway_1i10f3o" targetRef="submit_apply_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1mmbl9v" name="审批通过" sourceRef="Gateway_1i10f3o" targetRef="Gateway_0jx7bil">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:parallelGateway id="Gateway_0jx7bil">
       <bpmn:incoming>Flow_1mmbl9v</bpmn:incoming>
       <bpmn:outgoing>Flow_0uwhlwh</bpmn:outgoing>
@@ -109,7 +113,10 @@
     <bpmn:sequenceFlow id="Flow_0x6dx09" sourceRef="Event_05qek3u" targetRef="overdue_notify" />
     <bpmn:serviceTask id="overdue_notify" name="延期提醒">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="create_job_and_record_log" retries="3" />
+        <zeebe:taskDefinition type="overdue_notify" retries="3" />
+        <zeebe:executionListeners>
+          <zeebe:executionListener eventType="start" retries="3" type="create_job_and_record_log" />
+        </zeebe:executionListeners>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0x6dx09</bpmn:incoming>
       <bpmn:outgoing>Flow_14sdsv9</bpmn:outgoing>
@@ -129,8 +136,12 @@
         <bpmn:outgoing>Flow_0g8nuj3</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_0b95diw" sourceRef="accept_oa_feedbook" targetRef="Gateway_13g9kfc" />
-      <bpmn:sequenceFlow id="Flow_14zpea8" name="接受" sourceRef="Gateway_13g9kfc" targetRef="accept_oa_update_task_status" />
-      <bpmn:sequenceFlow id="Flow_0g8nuj3" name="拒绝" sourceRef="Gateway_13g9kfc" targetRef="send_email_to_applier" />
+      <bpmn:sequenceFlow id="Flow_14zpea8" name="接受" sourceRef="Gateway_13g9kfc" targetRef="accept_oa_update_task_status">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=oa_accepted = true</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0g8nuj3" name="拒绝" sourceRef="Gateway_13g9kfc" targetRef="send_email_to_applier">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=oa_accepted = false</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
       <bpmn:serviceTask id="send_email_to_applier" name="发送邮件告知申请人">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="send_email_to_applier" retries="3" />

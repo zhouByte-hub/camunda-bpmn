@@ -30,6 +30,8 @@ public class Ticket {
     private String updateName;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    
+    private String currentAssignee;
 
     // 工单是否逾期
     public boolean isOverdue() {

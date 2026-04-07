@@ -26,6 +26,7 @@ public class Task {
     private Integer retries;
     private String variables;
     private String candidateGroups;
+    private String assignee;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

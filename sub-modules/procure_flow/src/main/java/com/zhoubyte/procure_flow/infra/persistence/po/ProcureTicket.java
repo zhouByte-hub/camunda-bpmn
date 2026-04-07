@@ -57,4 +57,7 @@ public class ProcureTicket {
 
     @TableField("update_time")
     private LocalDateTime updateTime;           // 更新时间
+    
+    @TableField(exist = false)
+    private String currentAssignee;             // 当前处理人
 }

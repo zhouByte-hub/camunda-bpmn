@@ -28,21 +28,28 @@ public class ProcureCreateTicketService {
     private final IProcureTicketRepository iProcureTicketRepository;
 
     public TicketId createTicket(TicketCreateParam ticketCreateParam) {
+        validateTicketCreateParam(ticketCreateParam);
+        
         Ticket ticket = ticketService.createTicket(ticketCreateParam);
         log.info("ProcureTicketService.createTicket ticket = {}", ticket);
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcureTicketConstant.TICKET_ID, ticket.getTicketId());
+        variables.put(ProcureTicketConstant.TICKET_ID, ticket.getTicketId().getValue());
         variables.put(ProcureTicketConstant.TICKET_NAME, ticket.getTicketName());
-        variables.put(ProcureTicketConstant.TICKET_TYPE, ticket.getTicketType());
-        variables.put(ProcureTicketConstant.TICKET_PRIORITY, ticket.getTicketPriority());
-        variables.put(ProcureTicketConstant.TICKET_STATUS, ticket.getTicketStatus());
+        variables.put(ProcureTicketConstant.TICKET_TYPE, ticket.getTicketType().getValue());
+        variables.put(ProcureTicketConstant.TICKET_PRIORITY, ticket.getTicketPriority().getValue());
+        variables.put(ProcureTicketConstant.TICKET_STATUS, ticket.getTicketStatus().getValue());
         variables.put(ProcureTicketConstant.EXPECTED_COMPLETION_TIME, ticket.getExpectedCompletionTime());
         variables.put(ProcureTicketConstant.IS_NOTIFY, ticket.getIsNotify());
         variables.put(ProcureTicketConstant.PRE_OVERDUE_DAYS, ticket.getPreOverdueDays());
         variables.put(ProcureTicketConstant.POST_OVERDUE_DAYS, ticket.getPostOverdueDays());
         variables.put(ProcureTicketConstant.CREATOR_NAME, ticket.getCreatorName());
         variables.put(ProcureTicketConstant.CREATOR_ID, ticket.getCreatorId());
+        
+        String overdueDefinition = calculateOverdueDefinition(ticket.getIsNotify(), 
+                ticket.getPreOverdueDays(), ticket.getPostOverdueDays());
+        variables.put(ProcureTicketConstant.OVERDUE_DEFINITION, overdueDefinition);
+        
         log.info("ProcureTicketService.createTicket variables = {}", variables);
 
         StartProcessInstanceResult startProcessInstanceResult = processService.startProcessInstance(
@@ -51,6 +58,40 @@ public class ProcureCreateTicketService {
             throw new RuntimeException("流程实例启动失败");
         }
         return ticket.getTicketId();
+    }
+    
+    private void validateTicketCreateParam(TicketCreateParam param) {
+        if (Boolean.TRUE.equals(param.getIsNotify())) {
+            if (param.getPreOverdueDays() == null) {
+                throw new IllegalArgumentException("当 isNotify 为 true 时，preOverdueDays 不能为空");
+            }
+            if (param.getPostOverdueDays() == null) {
+                throw new IllegalArgumentException("当 isNotify 为 true 时，postOverdueDays 不能为空");
+            }
+            if (param.getPreOverdueDays() < 0) {
+                throw new IllegalArgumentException("preOverdueDays 不能为负数");
+            }
+            if (param.getPostOverdueDays() < 0) {
+                throw new IllegalArgumentException("postOverdueDays 不能为负数");
+            }
+        }
+    }
+    
+    private String calculateOverdueDefinition(Boolean isNotify, Integer preOverdueDays, Integer postOverdueDays) {
+        if (Boolean.FALSE.equals(isNotify)) {
+            return null;
+        }
+        
+        if (preOverdueDays == null || postOverdueDays == null) {
+            return null;
+        }
+        
+        int totalDays = preOverdueDays + postOverdueDays;
+        if (totalDays == 0) {
+            return "PT1H";
+        }
+        
+        return String.format("P%dD", totalDays);
     }
 
     public TicketSearchResponse ticketList(TicketSearchRequestParams ticketSearchRequestParams) {

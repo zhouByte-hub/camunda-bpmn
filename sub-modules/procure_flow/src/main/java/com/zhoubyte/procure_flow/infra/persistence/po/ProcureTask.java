@@ -52,6 +52,9 @@ public class ProcureTask {
     @TableField("candidate_groups")
     private String candidateGroups;         // 候选审核组
 
+    @TableField("assignee")
+    private String assignee;                // 处理人
+
     @TableField("create_time")
     private LocalDateTime createTime;       // 创建时间
 

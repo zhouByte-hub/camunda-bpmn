@@ -39,7 +39,11 @@ public class ProcureTicketService {
         return this.changeTicketStatus(ticket, ticketCreateParam.getCreatorId(), ticketCreateParam.getCreatorName(), TicketStatus.PROCESSING);
     }
 
-
+    public Ticket updateTicketStatus(TicketId ticketId, String operatorId, String operatorName, TicketStatus expectedStatus) {
+        Ticket ticket = ticketRepository.findByTicketId(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found: " + ticketId.getValue()));
+        return changeTicketStatus(ticket, operatorId, operatorName, expectedStatus);
+    }
 
     private Ticket changeTicketStatus(Ticket ticket, String operatorId, String operatorName, TicketStatus expectedStatus) {
         switch (expectedStatus) {

@@ -15,5 +15,6 @@ public interface ProcureTicketConstant {
     String POST_OVERDUE_DAYS = "post_overdue_days";
     String CREATOR_NAME = "creator_name";
     String CREATOR_ID = "creator_id";
+    String OVERDUE_DEFINITION = "overdue_definition";
 
 }
