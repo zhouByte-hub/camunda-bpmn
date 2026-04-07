@@ -1,1 +1,51 @@
-spring.application.name=contract_flow
+server:
+  port: 8081
+  servlet:
+    context-path: /contract
+
+spring:
+  application:
+    name: contract_flow
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ENC(XkHHLf+0S24LWlX7pijEaxj3BqCBpIrQvwFfLAXBvzWCC7BDzz48XU4LAfY2EOt16WdVmM7aoOqtOyn344WczP3cLA4bvnCX4l3Oh1cJG6QiBN4uSPKJmamV48WaKyPZcqj/5jjYOLofStqxiU06Ng==)
+    username: ENC(TzlTvj/SEw2x9uteXDgeKjocTSglftV5axWWPARbVD73E+ckuABL3XF/hhnIaCC9)
+    password: ENC(89wHE0gpVT3HEisLRTTCT9a611snV3x4ktWwZMJzqj0sbcns0AeqoGFPF2ZC7fVmD3l/VHDQbzldXHXaudYeUQ==)
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: contractPgHikariCP
+      max-lifetime: 900000
+      connection-timeout: 15000
+      connection-test-query: SELECT 1
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    baseline-description: baseline init
+    table: flyway_contract_schema_history
+    locations: classpath:migration
+    validate-on-migrate: true
+
+camunda:
+  client:
+    mode: self-managed
+    grpc-address: ENC(3Oz5CdOP1Mxu4Y7u/sn92ZpRMXeUNUJgJoDTXuv0riYpiZcfm5ngZ714RNjkWA1EfS4LxdL/lWuGuLhGIQo5UQ==)
+    rest-address: ENC(WkzegAwa1WfH++IAkRDSGo0OBc6DfiDIDPpnNP58e1TlGoZeaicQP7wORpiDg7O15Znt/VEPceVpwevWX+10Ow==)
+    prefer-rest-over-grpc: false
+    request-timeout: 60s
+    auth:
+      method: basic
+      username: ENC(Xf/tTg4Ji8hl6e21AYzCH8nTUnene5z2Z/Umxq7DKXX54WGYlgiVQeIkh/6+tEql)
+      password: ENC(k15ZkwmrfZeoh+qNf/j1TdvW0MURzPwI44U69rF+5/dChupoXNA0N7mD58tB3Xia)
+    enabled: true
+    worker:
+      defaults:
+        timeout: 30s
+        max-jobs-active: 32
+
+scorpio:
+  enabled: true
+  default-process-engine-name: camunda

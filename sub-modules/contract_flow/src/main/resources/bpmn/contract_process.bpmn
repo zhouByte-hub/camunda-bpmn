@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="contract_process" name="合同审批流程" isExecutable="true">
+    
+    <bpmn:startEvent id="start" name="合同提交">
+      <bpmn:outgoing>Flow_start_to_department</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="department_review" name="部门初审">
+      <bpmn:incoming>Flow_start_to_department</bpmn:incoming>
+      <bpmn:outgoing>Flow_department_to_legal</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:candidateGroups>department_leader</camunda:candidateGroups>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="legal_review" name="法务审核">
+      <bpmn:incoming>Flow_department_to_legal</bpmn:incoming>
+      <bpmn:outgoing>Flow_legal_to_risk</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:candidateGroups>legal_team</camunda:candidateGroups>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="risk_control" name="风控校验">
+      <bpmn:incoming>Flow_legal_to_risk</bpmn:incoming>
+      <bpmn:outgoing>Flow_risk_to_gateway</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>fetch_risk_control_data</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:exclusiveGateway id="approval_gateway" name="审批级别判断">
+      <bpmn:incoming>Flow_risk_to_gateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_gateway_to_director</bpmn:outgoing>
+      <bpmn:outgoing>Flow_gateway_to_ceo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:userTask id="director_approval" name="总监审批">
+      <bpmn:incoming>Flow_gateway_to_director</bpmn:incoming>
+      <bpmn:outgoing>Flow_director_to_seal</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:candidateGroups>director</camunda:candidateGroups>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="ceo_approval" name="CEO 审批">
+      <bpmn:incoming>Flow_gateway_to_ceo</bpmn:incoming>
+      <bpmn:outgoing>Flow_ceo_to_seal</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:candidateGroups>ceo</camunda:candidateGroups>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="seal_application" name="用印申请">
+      <bpmn:incoming>Flow_director_to_seal</bpmn:incoming>
+      <bpmn:incoming>Flow_ceo_to_seal</bpmn:incoming>
+      <bpmn:outgoing>Flow_seal_to_esign</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:candidateGroups>seal_admin</camunda:candidateGroups>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="esign_platform" name="外部签署">
+      <bpmn:incoming>Flow_seal_to_esign</bpmn:incoming>
+      <bpmn:outgoing>Flow_esign_to_archive</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>send_to_esign_platform</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="archive_contract" name="归档">
+      <bpmn:incoming>Flow_esign_to_archive</bpmn:incoming>
+      <bpmn:outgoing>Flow_archive_to_crm</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>archive_contract</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="update_crm" name="更新 CRM">
+      <bpmn:incoming>Flow_archive_to_crm</bpmn:incoming>
+      <bpmn:outgoing>Flow_crm_to_payment</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>update_crm_status</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="trigger_payment" name="触发付款">
+      <bpmn:incoming>Flow_crm_to_payment</bpmn:incoming>
+      <bpmn:outgoing>Flow_payment_to_timer</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>trigger_payment_process</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:intermediateCatchEvent id="expiry_timer" name="到期提醒">
+      <bpmn:incoming>Flow_payment_to_timer</bpmn:incoming>
+      <bpmn:outgoing>Flow_timer_to_reminder</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${overdue_definition}</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:serviceTask id="expiry_reminder" name="发送到期提醒">
+      <bpmn:incoming>Flow_timer_to_reminder</bpmn:incoming>
+      <bpmn:outgoing>Flow_reminder_to_end</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <camunda:type>external</camunda:type>
+        <camunda:topic>send_expiry_reminder</camunda:topic>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="end" name="流程结束">
+      <bpmn:incoming>Flow_reminder_to_end</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_start_to_department" sourceRef="start" targetRef="department_review"/>
+    <bpmn:sequenceFlow id="Flow_department_to_legal" sourceRef="department_review" targetRef="legal_review"/>
+    <bpmn:sequenceFlow id="Flow_legal_to_risk" sourceRef="legal_review" targetRef="risk_control"/>
+    <bpmn:sequenceFlow id="Flow_risk_to_gateway" sourceRef="risk_control" targetRef="approval_gateway"/>
+    
+    <bpmn:sequenceFlow id="Flow_gateway_to_director" sourceRef="approval_gateway" targetRef="director_approval">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${contract_amount &lt;= 100000000}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_gateway_to_ceo" sourceRef="approval_gateway" targetRef="ceo_approval">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${contract_amount &gt; 100000000}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_director_to_seal" sourceRef="director_approval" targetRef="seal_application"/>
+    <bpmn:sequenceFlow id="Flow_ceo_to_seal" sourceRef="ceo_approval" targetRef="seal_application"/>
+    <bpmn:sequenceFlow id="Flow_seal_to_esign" sourceRef="seal_application" targetRef="esign_platform"/>
+    <bpmn:sequenceFlow id="Flow_esign_to_archive" sourceRef="esign_platform" targetRef="archive_contract"/>
+    <bpmn:sequenceFlow id="Flow_archive_to_crm" sourceRef="archive_contract" targetRef="update_crm"/>
+    <bpmn:sequenceFlow id="Flow_crm_to_payment" sourceRef="update_crm" targetRef="trigger_payment"/>
+    <bpmn:sequenceFlow id="Flow_payment_to_timer" sourceRef="trigger_payment" targetRef="expiry_timer"/>
+    <bpmn:sequenceFlow id="Flow_timer_to_reminder" sourceRef="expiry_timer" targetRef="expiry_reminder"/>
+    <bpmn:sequenceFlow id="Flow_reminder_to_end" sourceRef="expiry_reminder" targetRef="end"/>
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="contract_process">
+      <bpmndi:BPMNShape id="BPMNShape_start" bpmnElement="start">
+        <dc:Bounds x="152" y="102" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_department_review" bpmnElement="department_review">
+        <dc:Bounds x="240" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_legal_review" bpmnElement="legal_review">
+        <dc:Bounds x="400" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_risk_control" bpmnElement="risk_control">
+        <dc:Bounds x="560" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_approval_gateway" bpmnElement="approval_gateway" isMarkerVisible="true">
+        <dc:Bounds x="725" y="95" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_director_approval" bpmnElement="director_approval">
+        <dc:Bounds x="860" y="20" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ceo_approval" bpmnElement="ceo_approval">
+        <dc:Bounds x="860" y="140" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_seal_application" bpmnElement="seal_application">
+        <dc:Bounds x="1040" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_esign_platform" bpmnElement="esign_platform">
+        <dc:Bounds x="1200" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_archive_contract" bpmnElement="archive_contract">
+        <dc:Bounds x="1360" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_update_crm" bpmnElement="update_crm">
+        <dc:Bounds x="1520" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_trigger_payment" bpmnElement="trigger_payment">
+        <dc:Bounds x="1680" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_expiry_timer" bpmnElement="expiry_timer">
+        <dc:Bounds x="1832" y="102" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_expiry_reminder" bpmnElement="expiry_reminder">
+        <dc:Bounds x="1920" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_end" bpmnElement="end">
+        <dc:Bounds x="2082" y="102" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_start_to_department" bpmnElement="Flow_start_to_department">
+        <di:waypoint x="188" y="120"/>
+        <di:waypoint x="240" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_department_to_legal" bpmnElement="Flow_department_to_legal">
+        <di:waypoint x="340" y="120"/>
+        <di:waypoint x="400" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_legal_to_risk" bpmnElement="Flow_legal_to_risk">
+        <di:waypoint x="500" y="120"/>
+        <di:waypoint x="560" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_risk_to_gateway" bpmnElement="Flow_risk_to_gateway">
+        <di:waypoint x="660" y="120"/>
+        <di:waypoint x="725" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_gateway_to_director" bpmnElement="Flow_gateway_to_director">
+        <di:waypoint x="750" y="95"/>
+        <di:waypoint x="750" y="60"/>
+        <di:waypoint x="860" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_gateway_to_ceo" bpmnElement="Flow_gateway_to_ceo">
+        <di:waypoint x="750" y="145"/>
+        <di:waypoint x="750" y="180"/>
+        <di:waypoint x="860" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_director_to_seal" bpmnElement="Flow_director_to_seal">
+        <di:waypoint x="960" y="60"/>
+        <di:waypoint x="1000" y="60"/>
+        <di:waypoint x="1000" y="120"/>
+        <di:waypoint x="1040" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_ceo_to_seal" bpmnElement="Flow_ceo_to_seal">
+        <di:waypoint x="960" y="180"/>
+        <di:waypoint x="1000" y="180"/>
+        <di:waypoint x="1000" y="120"/>
+        <di:waypoint x="1040" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_seal_to_esign" bpmnElement="Flow_seal_to_esign">
+        <di:waypoint x="1140" y="120"/>
+        <di:waypoint x="1200" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_esign_to_archive" bpmnElement="Flow_esign_to_archive">
+        <di:waypoint x="1300" y="120"/>
+        <di:waypoint x="1360" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_archive_to_crm" bpmnElement="Flow_archive_to_crm">
+        <di:waypoint x="1460" y="120"/>
+        <di:waypoint x="1520" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_crm_to_payment" bpmnElement="Flow_crm_to_payment">
+        <di:waypoint x="1620" y="120"/>
+        <di:waypoint x="1680" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_payment_to_timer" bpmnElement="Flow_payment_to_timer">
+        <di:waypoint x="1780" y="120"/>
+        <di:waypoint x="1832" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_timer_to_reminder" bpmnElement="Flow_timer_to_reminder">
+        <di:waypoint x="1868" y="120"/>
+        <di:waypoint x="1920" y="120"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_reminder_to_end" bpmnElement="Flow_reminder_to_end">
+        <di:waypoint x="2020" y="120"/>
+        <di:waypoint x="2082" y="120"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>
